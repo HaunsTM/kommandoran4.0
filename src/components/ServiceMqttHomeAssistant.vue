@@ -7,6 +7,7 @@ import { Component, Vue } from 'vue-facing-decorator';
 import { mqttConfig } from '../mqtt.config';
 import { Client, Message } from 'paho-mqtt';
 import type IMqttMessage from '../interfaces/iMqttMessage';
+import { useMqttStore } from '../stores/mqttStore';
 
 
 @Component
@@ -14,6 +15,7 @@ export default class ServiceMqttHomeAssistant extends Vue {
     
     private mqttClient!: Client;
     private topicsAndMessages!: Map<string, IMqttMessage>;
+    private mqttStore = useMqttStore();
 
     private initialize() {
         this.topicsAndMessages = new Map();
@@ -99,7 +101,6 @@ export default class ServiceMqttHomeAssistant extends Vue {
         this.mqttClient.send(mqttMessage);
     }
 
-
     /** hooks */
     private created(): void {
         this.initialize();
@@ -109,7 +110,12 @@ export default class ServiceMqttHomeAssistant extends Vue {
 
     private mounted(): void {
         this.connect();
-        console.log("hell2");
+    }
+
+    private beforeDestroy() {
+        if(this.mqttClient?.isConnected()) {
+            this.mqttClient.disconnect();
+        }
     }
 
 }

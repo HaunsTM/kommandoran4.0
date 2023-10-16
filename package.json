@@ -10,12 +10,15 @@
   "dependencies": {
     "@types/paho-mqtt": "^1.0.8",
     "core-js": "^3.8.3",
+    "lodash": "^4.17.21",
     "paho-mqtt": "^1.1.0",
+    "pinia": "^2.1.6",
     "vue": "^3.2.13",
     "vue-facing-decorator": "^3.0.3",
     "vue-router": "^4.0.3"
   },
   "devDependencies": {
+    "@types/lodash": "^4.14.199",
     "@typescript-eslint/eslint-plugin": "^5.4.0",
     "@typescript-eslint/parser": "^5.4.0",
     "@vue/cli-plugin-babel": "~5.0.0",
