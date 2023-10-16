@@ -41,10 +41,6 @@
 
 import { Component, Watch, Vue } from 'vue-property-decorator';
 
-
-import { mapState, mapMutations, mapActions, mapGetters } from 'vuex';
-import { namespace } from 'vuex-class';
-
 import AllTransportData from '@/helpers/allTransportData';
 import IAllTransportData from '@/interfaces/iAllTransportData';
 import IDeparture from '@/interfaces/iDeparture';
