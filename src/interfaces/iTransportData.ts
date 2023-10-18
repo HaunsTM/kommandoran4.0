@@ -1,4 +1,4 @@
-export interface ITransportData {
+export default interface ITransportData {
     city: string;
     name: string;
     journeyDate: string;

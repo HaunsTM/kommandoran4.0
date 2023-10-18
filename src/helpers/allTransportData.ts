@@ -1,4 +1,4 @@
-import {ITransportData} from '@/interfaces/iTransportData';
+import ITransportData from '@/interfaces/iTransportData';
 import Departure from '@/helpers/departure';
 import TransportData from '@/helpers/transportData';
 import _ from "lodash";

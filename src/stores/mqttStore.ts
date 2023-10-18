@@ -1,20 +1,70 @@
 import { defineStore } from 'pinia';
+import AllTransportData from '../helpers/allTransportData';
+
 import type IMqttMessage from '../interfaces/iMqttMessage';
+import { mqttConfig } from '../mqtt.config';
+
+import { useDepartureStore } from '@/stores/departureStore'
+
+const initialMessage:IMqttMessage = {
+  timeReceived: -1,
+  message: "N/A"
+};
 
 export const useMqttStore = defineStore({
   id: 'mqtt',
-  state: () => {
-    return {
-      topicsAndMessages: new Map() as Map<string, IMqttMessage>,
-    }
+  state: () => ({    
+    topicsAndMessages: new Map([
+      [mqttConfig.topic.climate_utilityRoomFloor, initialMessage],
+      [mqttConfig.topic.climate_mainThermostat, initialMessage],
+      [mqttConfig.topic.climate_outdoorRoom, initialMessage],
+      [mqttConfig.topic.climate_sjöstorpsvägen_3a, initialMessage],
+      [mqttConfig.topic.image_screensaver, initialMessage],
+      [mqttConfig.topic.sound_play_file, initialMessage],
+      [mqttConfig.topic.transport_departure, initialMessage]
+    ]) as Map<string, IMqttMessage>,
+  }),
+  getters: {
+    getTopicsAndMessages(state): Map<string, IMqttMessage> {
+      return state.topicsAndMessages;
+    },
   },
   actions: {
-    addMessage(topic: string, message: IMqttMessage) {
-      this.topicsAndMessages.set(topic, message);
+    getMessageByTopic(topic: string): IMqttMessage {
+      const mqttMessage = this.getTopicsAndMessages.get(topic) as IMqttMessage;
+      return mqttMessage;
+    },
+    addMessage(topic: string, payload: IMqttMessage) {
+      this.topicsAndMessages.set(topic, payload);
 
+      try {
+        const jSONMessage = JSON.parse(payload.message);
+
+        switch (topic) {
+            case mqttConfig.topic.climate_utilityRoomFloor:
+                break;
+            case mqttConfig.topic.climate_mainThermostat:
+                break;
+            case mqttConfig.topic.climate_outdoorRoom:
+                break;
+            case mqttConfig.topic.climate_sjöstorpsvägen_3a:
+                break;
+            case mqttConfig.topic.image_screensaver:
+                break;
+            case mqttConfig.topic.sound_play_file:
+                break;
+            case mqttConfig.topic.transport_departure: {
+              const departureStore = useDepartureStore();
+              const lines = jSONMessage.lines;
+              departureStore.updateLines(lines);
+              break;
+            }                
+            default:
+        }
+
+      } catch (error) {
+        console.error(error);
+      }
     },
-    clearDerivedMessages() {
-        this.topicsAndMessages.clear();
-    },
-  },
-});
+  }
+})

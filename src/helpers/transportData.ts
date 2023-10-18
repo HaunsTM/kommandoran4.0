@@ -1,4 +1,4 @@
-import {ITransportData} from '@/interfaces/iTransportData';
+import ITransportData from '@/interfaces/iTransportData';
 export default class TransportData implements ITransportData {
     city!: string;
     journeyDateTime!: number;
@@ -46,7 +46,8 @@ export default class TransportData implements ITransportData {
                 depTimeDeviation : line.realTimeInfo?.depTimeDeviation ? line.realTimeInfo?.depTimeDeviation : '',
                 depDeviationAffect : line.realTimeInfo?.depDeviationAffect ? line.realTimeInfo?.depDeviationAffect : '',
             };
-            runNo: this.runNo ? this.runNo : '';
+            
+            this.runNo = this.runNo ? this.runNo : '';
         }
     }
 }

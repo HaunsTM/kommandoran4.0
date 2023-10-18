@@ -14,28 +14,16 @@ import { useMqttStore } from '../stores/mqttStore';
 export default class ServiceMqttHomeAssistant extends Vue {
     
     private mqttClient!: Client;
-    private topicsAndMessages!: Map<string, IMqttMessage>;
     private mqttStore = useMqttStore();
 
-    private initialize() {
-        this.topicsAndMessages = new Map();
-        
-        const initialMessage:IMqttMessage = {
-          timeReceived: -1,
-          message: "N/A"
-        };
-
-        this.topicsAndMessages.set(mqttConfig.topic.climate_utilityRoomFloor, initialMessage);
-        this.topicsAndMessages.set(mqttConfig.topic.climate_mainThermostat, initialMessage);
-        this.topicsAndMessages.set(mqttConfig.topic.climate_outdoorRoom, initialMessage);
-        this.topicsAndMessages.set(mqttConfig.topic.climate_sjöstorpsvägen_3a, initialMessage);
-
-        this.topicsAndMessages.set(mqttConfig.topic.image_screensaver, initialMessage);
-
-        this.topicsAndMessages.set(mqttConfig.topic.sound_play_file, initialMessage);
-
-        this.topicsAndMessages.set(mqttConfig.topic.transport_departure, initialMessage);
-    }
+    private readonly topicsForSubscription = 
+        [mqttConfig.topic.climate_utilityRoomFloor,
+        mqttConfig.topic.climate_mainThermostat,
+        mqttConfig.topic.climate_outdoorRoom,
+        mqttConfig.topic.climate_sjöstorpsvägen_3a,
+        mqttConfig.topic.image_screensaver,
+        mqttConfig.topic.sound_play_file,
+        mqttConfig.topic.transport_departure];
 
     private connect() {
         const clientId = `mqtt_${Math.random().toString(16).slice(3)}`
@@ -55,7 +43,7 @@ export default class ServiceMqttHomeAssistant extends Vue {
             console.log('Connected to MQTT broker');
             
             try {
-                for (const topic of this.topicsAndMessages.keys()) {
+                for (const topic of this.topicsForSubscription) {
                     this.mqttClient?.subscribe(topic);
                 }
                 this.mqttClient.onMessageArrived = this.onMessageArrived;
@@ -88,7 +76,7 @@ export default class ServiceMqttHomeAssistant extends Vue {
                 message: message.payloadString
             };
             const topic = message.destinationName;
-            this.topicsAndMessages.set(topic, mqttMessage);
+            this.mqttStore.addMessage(topic, mqttMessage);
             console.log({mqttMessage});
         } catch (error) {
             console.error(`Error in receiving mqtt: ${error}`); 
@@ -103,12 +91,12 @@ export default class ServiceMqttHomeAssistant extends Vue {
 
     /** hooks */
     private created(): void {
-        this.initialize();
         //this.startMqttService(mqttConfig.clientOptions);
         console.log("hell1");
     }
 
     private mounted(): void {
+        console.log("monted");
         this.connect();
     }
 

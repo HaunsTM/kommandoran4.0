@@ -1,5 +1,5 @@
 import IDeparture from '@/interfaces/iDeparture';
-import {ITransportData} from '@/interfaces/iTransportData';
+import ITransportData from '@/interfaces/iTransportData';
 
 export default class Departure implements IDeparture {
     city!: string;
