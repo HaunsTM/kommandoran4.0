@@ -1,5 +1,4 @@
 import { defineStore } from 'pinia';
-import AllTransportData from '../helpers/allTransportData';
 
 import type IMqttMessage from '../interfaces/iMqttMessage';
 import { mqttConfig } from '../mqtt.config';
@@ -23,10 +22,14 @@ export const useMqttStore = defineStore({
       [mqttConfig.topic.sound_play_file, initialMessage],
       [mqttConfig.topic.transport_departure, initialMessage]
     ]) as Map<string, IMqttMessage>,
+    lastRecievedMqttMessage: -1 as number
   }),
   getters: {
     getTopicsAndMessages(state): Map<string, IMqttMessage> {
       return state.topicsAndMessages;
+    },
+    getLastRecievedMqttMessage(state): number {
+      return state.lastRecievedMqttMessage;
     },
   },
   actions: {
@@ -36,7 +39,8 @@ export const useMqttStore = defineStore({
     },
     addMessage(topic: string, payload: IMqttMessage) {
       this.topicsAndMessages.set(topic, payload);
-
+      this.lastRecievedMqttMessage = payload.timeReceived;
+      
       try {
         const jSONMessage = JSON.parse(payload.message);
 

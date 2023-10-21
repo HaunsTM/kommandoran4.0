@@ -1,7 +1,25 @@
 <template>
-  <router-view/>
+  <div>    
+    <router-view/>
+    <service-mqtt-home-assistant></service-mqtt-home-assistant>
+  </div>
 </template>
 
+<script lang="ts">
+
+import { Component, Vue } from 'vue-facing-decorator';
+import ServiceMqttHomeAssistant from './components/ServiceMqttHomeAssistant.vue';
+
+@Component({ 
+  components: { 
+    ServiceMqttHomeAssistant
+  } 
+})
+export default class ScreenSaverView extends Vue 
+{
+}
+
+</script>
 <style>
 #app {
   font-family: Avenir, Helvetica, Arial, sans-serif;
