@@ -68,8 +68,6 @@ export default class ServiceMqttHomeAssistant extends Vue {
     }
 
     private onMessageArrived(message: Message) {
-        console.log('Received message: ' + message.payloadString);
-        
         try {  
             const mqttMessage: IMqttMessage = {
                 timeReceived: Date.now(),
@@ -77,7 +75,6 @@ export default class ServiceMqttHomeAssistant extends Vue {
             };
             const topic = message.destinationName;
             this.mqttStore.addMessage(topic, mqttMessage);
-            console.log({mqttMessage});
         } catch (error) {
             console.error(`Error in receiving mqtt: ${error}`); 
         }
@@ -92,11 +89,9 @@ export default class ServiceMqttHomeAssistant extends Vue {
     /** hooks */
     private created(): void {
         //this.startMqttService(mqttConfig.clientOptions);
-        console.log("hell1");
     }
 
     private mounted(): void {
-        console.log("monted");
         this.connect();
     }
 

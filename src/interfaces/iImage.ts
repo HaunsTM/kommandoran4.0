@@ -1,4 +1,7 @@
 export default interface IImage {
-    originalFileName: string;
+    actualHostSrcImage: string;
     distributionTimeUTC: number;
+    originalFileName: string;
+    
+    src(): Promise<string>;
 }

@@ -2,7 +2,9 @@ import { defineStore } from 'pinia';
 
 import type IMqttMessage from '../interfaces/iMqttMessage';
 import { mqttConfig } from '../mqtt.config';
+import Image from '@/helpers/image';
 
+import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { useDepartureStore } from '@/stores/departureStore'
 
 const initialMessage:IMqttMessage = {
@@ -53,8 +55,18 @@ export const useMqttStore = defineStore({
                 break;
             case mqttConfig.topic.climate_sjöstorpsvägen_3a:
                 break;
-            case mqttConfig.topic.image_screensaver:
-                break;
+            case mqttConfig.topic.image_screensaver: {
+              const actualHostSrcImage = 
+                `http://${mqttConfig.connection.hostname}:8123/local/kommandoran/screensaver_image.jpg`;
+              const screenSaverImageStore = useScreenSaverImageStore();
+              
+              const screensaverImage = 
+                new Image(actualHostSrcImage, jSONMessage.originalFileName, jSONMessage.distributionTimeUTC);
+              
+              screenSaverImageStore.updateImage(screensaverImage);
+
+              break;
+            }
             case mqttConfig.topic.sound_play_file:
                 break;
             case mqttConfig.topic.transport_departure: {
