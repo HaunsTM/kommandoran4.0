@@ -21,7 +21,7 @@ export default class Image implements IImage {
     async src(): Promise<string> {
         const url = this.srcUrlUnique();
         const base64Image = await this.getBase64Image(url);
-        const src = `data:image/jpeg;base64,${base64Image}`;
+        const src = base64Image;
         return src;
     }
 

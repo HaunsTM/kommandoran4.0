@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="image-container">
-        <img :src="imgSrc()" alt="">
+        <img :src="imgSrc" alt="">
     </div>
     
     <kommandoran-footer-transport></kommandoran-footer-transport>
@@ -26,15 +26,16 @@ import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 export default class ScreenSaverView extends Vue 
 { 
     private screenSaverImageStore = useScreenSaverImageStore();
-
+    imgSrc = "";
     
-    @Watch('this.screenSaverImageStore')
-    async imgSrc(): Promise<string>  {
-      if (this.screenSaverImageStore.currentImage) {
+    @Watch('this.screenSaverImageStore.currentImage.distributionTimeUTC')
+    async getNewImgSrc(): Promise<void>  {
+      if (this.screenSaverImageStore.currentImage?.distributionTimeUTC) {
           const src = await this.screenSaverImageStore.currentImage.src();
-          return src;
+          this.imgSrc = src;
+      } else {
+        this.imgSrc = "";
       }
-      return "";
     }
 
 
