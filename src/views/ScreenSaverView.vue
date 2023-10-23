@@ -1,6 +1,7 @@
 <template>
   <div>
     <div class="image-container">
+      {{ distributionTimeUTC }}
         <img :src="imgSrc" alt="">
     </div>
     
@@ -27,11 +28,18 @@ export default class ScreenSaverView extends Vue
 { 
     private screenSaverImageStore = useScreenSaverImageStore();
     imgSrc = "";
+
+    get distributionTimeUTC() :  number {
+      if (this.screenSaverImageStore.getCurrentImage) {
+        return this.screenSaverImageStore.getCurrentImage?.distributionTimeUTC;
+      }
+      return -1;
+    }
     
-    @Watch('this.screenSaverImageStore.currentImage.distributionTimeUTC')
+    @Watch('distributionTimeUTC')
     async getNewImgSrc(): Promise<void>  {
-      if (this.screenSaverImageStore.currentImage?.distributionTimeUTC) {
-          const src = await this.screenSaverImageStore.currentImage.src();
+      if (this.screenSaverImageStore.getCurrentImage) {
+          const src = await this.screenSaverImageStore.getCurrentImage.src();
           this.imgSrc = src;
       } else {
         this.imgSrc = "";

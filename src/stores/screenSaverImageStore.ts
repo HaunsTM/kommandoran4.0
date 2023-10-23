@@ -10,7 +10,7 @@ export const useScreenSaverImageStore = defineStore({
     }
   },
   getters: {
-    current(state): IImage | null {
+    getCurrentImage(state): IImage | null {
       return state.currentImage;
     },
   },
