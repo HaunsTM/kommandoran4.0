@@ -1,28 +1,24 @@
+import ImageSourceImageFile from './imageSourceImageFile';
+import ImageReceivedImage from './imageReceivedImage';
 import IImage from '@/interfaces/iImage';
 
 export default class Image implements IImage {
 
-    readonly actualHostSrcImage!: string;
-    readonly distributionTimeUTC!: number;
-    readonly originalFileName!: string;
+    private _actualHostSrcImage: string;
 
-    constructor(actualHostSrcImage: string, originalFileName: string, distributionTimeUTC: number) {        
-        this.actualHostSrcImage = actualHostSrcImage;
-        this.originalFileName = originalFileName;
-        this.distributionTimeUTC = distributionTimeUTC;
+    private _sourceImageFile: ImageSourceImageFile;
+
+    private _base64Image = "";
+
+    constructor(actualHostSrcImage: string, originalFileName: string, distributionTimeUTC: number, fileSizeInBytes: number) {        
+        this._actualHostSrcImage = actualHostSrcImage;
+        this._sourceImageFile = new ImageSourceImageFile(originalFileName, distributionTimeUTC, fileSizeInBytes);
     }
 
     private srcUrlUnique(): string {
         const url = 
-            `${this.actualHostSrcImage}?${this.distributionTimeUTC}`;
+            `${this._actualHostSrcImage}?${this._sourceImageFile.distributionTimeUTC}`;
         return url;
-    }
-
-    async src(): Promise<string> {
-        const url = this.srcUrlUnique();
-        const base64Image = await this.getBase64Image(url);
-        const src = base64Image;
-        return src;
     }
 
     private async getBase64Image(url: string): Promise<string> {
@@ -41,5 +37,25 @@ export default class Image implements IImage {
             reader.onerror = reject;
             reader.readAsDataURL(blob);
         });
+    }
+
+    get actualHostSrcImage() {
+        return this._actualHostSrcImage;
+    }
+
+    sourceImageFile() {
+        return this._sourceImageFile;
+    }
+    
+    
+     async receivedImage() {
+        
+        if (this._base64Image === "") {
+            const url = this.srcUrlUnique();
+            this._base64Image = await this.getBase64Image(url);
+        }
+
+        return new ImageReceivedImage(this._base64Image);
+
     }
 }

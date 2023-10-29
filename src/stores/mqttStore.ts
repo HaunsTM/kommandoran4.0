@@ -60,10 +60,13 @@ export const useMqttStore = defineStore({
                 `http://${mqttConfig.connection.hostname}:8123/local/kommandoran/screensaver_image.jpg`;
               const screenSaverImageStore = useScreenSaverImageStore();
               
-              const screensaverImage = 
-                new Image(actualHostSrcImage, jSONMessage.originalFileName, jSONMessage.distributionTimeUTC);
+              const sourceImage = 
+                new Image(  actualHostSrcImage, 
+                            jSONMessage.originalFileName, 
+                            jSONMessage.distributionTimeUTC, 
+                            jSONMessage.fileSizeInBytes);
               
-              screenSaverImageStore.updateImage(screensaverImage);
+              screenSaverImageStore.updateImage(sourceImage);
 
               break;
             }

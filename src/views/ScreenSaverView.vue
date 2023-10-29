@@ -1,7 +1,6 @@
 <template>
   <div>
     <div class="image-container">
-      {{ distributionTimeUTC }}
         <img :src="imgSrc" alt="">
     </div>
     
@@ -17,6 +16,7 @@ import StatusIndicator from '../components/StatusIndicator.vue';
 
 import { mqttConfig } from '../mqtt.config';
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
+import { castArray } from 'lodash';
 
 @Component({ 
   components: { 
@@ -26,27 +26,33 @@ import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 })
 export default class ScreenSaverView extends Vue 
 { 
-    private screenSaverImageStore = useScreenSaverImageStore();
-    imgSrc = "";
+  private screenSaverImageStore = useScreenSaverImageStore();
+  imgSrc = "";
 
-    get distributionTimeUTC() :  number {
-      if (this.screenSaverImageStore.getCurrentImage) {
-        return this.screenSaverImageStore.getCurrentImage?.distributionTimeUTC;
-      }
-      return -1;
-    }
+  get distributionTimeUTC() :  number {
+    try {
+      const sourceImageFile = this.screenSaverImageStore.getCurrentImage?.sourceImageFile();
+      const distributionTimeUTC = sourceImageFile.distributionTimeUTC;
+      return distributionTimeUTC;
     
-    @Watch('distributionTimeUTC')
-    async getNewImgSrc(): Promise<void>  {
-      if (this.screenSaverImageStore.getCurrentImage) {
-          const src = await this.screenSaverImageStore.getCurrentImage.src();
-          this.imgSrc = src;
-      } else {
-        this.imgSrc = "";
-      }
+    } catch (error) {
+      return -1;
+    } 
+  }
+  
+  @Watch('distributionTimeUTC')
+  async getNewImgSrc(): Promise<void>  {
+    const currentImage = this.screenSaverImageStore.getCurrentImage;
+    if (currentImage) {
+        const receivedImage = await currentImage.receivedImage();
+        const sizeInKBytes = receivedImage.sizeInKBytes;
+        this.imgSrc = receivedImage.src;
+        console.log(sizeInKBytes);
+
+    } else {
+      this.imgSrc = "";
     }
-
-
+  }
 }
 
 </script>

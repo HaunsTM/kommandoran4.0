@@ -3,12 +3,12 @@
 </template>
 
 <script lang="ts">
+
 import { Component, Vue } from 'vue-facing-decorator';
 import { mqttConfig } from '../mqtt.config';
 import { Client, Message } from 'paho-mqtt';
 import type IMqttMessage from '../interfaces/iMqttMessage';
 import { useMqttStore } from '../stores/mqttStore';
-
 
 @Component
 export default class ServiceMqttHomeAssistant extends Vue {

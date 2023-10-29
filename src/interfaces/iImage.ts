@@ -1,7 +1,10 @@
+import IImageSourceImageFile from '@/interfaces/iImageSourceImageFile';
+import IImageReceivedImage from '@/interfaces/iImageReceivedImage';
 export default interface IImage {
-    actualHostSrcImage: string;
-    distributionTimeUTC: number;
-    originalFileName: string;
+
+    get actualHostSrcImage(): string;
+
+    sourceImageFile() : IImageSourceImageFile;
     
-    src(): Promise<string>;
+    receivedImage() : Promise<IImageReceivedImage>;  
 }
