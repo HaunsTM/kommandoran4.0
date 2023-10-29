@@ -1,11 +1,21 @@
 <template>
-  <div>
-    <div class="image-container">
+  <div class="container">
+    <div>
         <img :src="imgSrc" alt="">
     </div>
     
-    <kommandoran-footer-transport></kommandoran-footer-transport>
-    <status-indicator></status-indicator>
+    <div>
+        <img :src="imgSrc" alt="">
+    </div>
+    
+    <div>
+        <img :src="imgSrc" alt="">
+    </div>
+    
+    <div>
+        <img :src="imgSrc" alt="">
+    </div>
+    
   </div>
 </template>
 
@@ -14,7 +24,6 @@ import { Component, Watch, Vue } from 'vue-facing-decorator';
 import KommandoranFooterTransport from '../components/KommandoranFooterTransport.vue';
 import StatusIndicator from '../components/StatusIndicator.vue';
 
-import { mqttConfig } from '../mqtt.config';
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { castArray } from 'lodash';
 
@@ -59,25 +68,22 @@ export default class ScreenSaverView extends Vue
 
 <style scoped>
 
-    .card 
-        {
-        position: fixed;
-        top:0;
-        left: 0;
-        /**/        
-        padding-top: 2rem;
-        height: calc(100vh - 47px);
-        max-height: calc(100vh - 47px);
-    }
+.container {
+    display: flex;
+    flex-wrap: wrap;
+    height: 100vh;
+    width: 100vw;
+}
 
-    .image-container {
-        display: flex;
-        justify-content: center;
-        width: 100vw;
-    }
+.container>div {
+  flex: 50%;
+      max-height: 49vh;
+  box-shadow: 0 0 0 1px black;
+}
     img {
-
-        height: calc(100vh - 160px);
+      width: 100%;
+      height: 100%;
+      object-fit: contain;
     }
 
 
