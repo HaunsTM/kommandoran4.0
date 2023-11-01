@@ -9,7 +9,7 @@
     </div>
     
     <div>
-        <img :src="imgSrc" alt="">
+        <time-and-date></time-and-date>
     </div>
     
     <div>
@@ -23,6 +23,7 @@
 import { Component, Watch, Vue } from 'vue-facing-decorator';
 import KommandoranFooterTransport from '../components/KommandoranFooterTransport.vue';
 import StatusIndicator from '../components/StatusIndicator.vue';
+import TimeAndDate from '../components/TimeAndDate.vue';
 
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { castArray } from 'lodash';
@@ -30,7 +31,8 @@ import { castArray } from 'lodash';
 @Component({ 
   components: { 
     KommandoranFooterTransport,
-    StatusIndicator
+    StatusIndicator,
+    TimeAndDate
   } 
 })
 export default class ScreenSaverView extends Vue 

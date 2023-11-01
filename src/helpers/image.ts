@@ -22,21 +22,25 @@ export default class Image implements IImage {
     }
 
     private async getBase64Image(url: string): Promise<string> {
-        const response = await fetch(url);
-        const blob = await response.blob();
-        
-        return new Promise((resolve, reject) => {
-            const reader = new FileReader();
-            reader.onloadend = () => {
-                if (typeof reader.result === 'string') {
-                    resolve(reader.result);
-                } else {
-                    reject('Unexpected result type');
-                }
-            };
-            reader.onerror = reject;
-            reader.readAsDataURL(blob);
-        });
+        try {
+            const response = await fetch(url);
+            const blob = await response.blob();
+            
+            return new Promise((resolve, reject) => {
+                const reader = new FileReader();
+                reader.onloadend = () => {
+                    if (typeof reader.result === 'string') {
+                        resolve(reader.result);
+                    } else {
+                        reject('Unexpected result type');
+                    }
+                };
+                reader.onerror = reject;
+                reader.readAsDataURL(blob);
+            });            
+        } catch (error) {
+            return "";
+        }
     }
 
     get actualHostSrcImage() {
@@ -48,7 +52,7 @@ export default class Image implements IImage {
     }
     
     
-     async receivedImage() {
+    async receivedImage() {
         
         if (this._base64Image === "") {
             const url = this.srcUrlUnique();
