@@ -13,18 +13,19 @@
       :faceTextSizeFont="'16px Arial'"
       :faceTextColor="'black'"
       ></analog-clock>
-   
+    <transport></transport>
 </template>
   
   <script lang="ts">
   import { Component, Vue } from 'vue-facing-decorator';
   import AnalogClock from '../components/AnalogClock.vue';
-
+  import Transport from '../components/Transport.vue';
   import moment from "moment";
   @Component({ 
-	components: { 
-		AnalogClock
-	} 
+    components: { 
+      AnalogClock,
+      Transport
+    } 
 	})
   export default class TimeAndDate extends Vue {
 

@@ -21,7 +21,6 @@
 
 <script lang="ts">
 import { Component, Watch, Vue } from 'vue-facing-decorator';
-import KommandoranFooterTransport from '../components/KommandoranFooterTransport.vue';
 import StatusIndicator from '../components/StatusIndicator.vue';
 import TimeAndDate from '../components/TimeAndDate.vue';
 
@@ -29,8 +28,7 @@ import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { castArray } from 'lodash';
 
 @Component({ 
-  components: { 
-    KommandoranFooterTransport,
+  components: {
     StatusIndicator,
     TimeAndDate
   } 
@@ -44,8 +42,7 @@ export default class ScreenSaverView extends Vue
     try {
       const sourceImageFile = this.screenSaverImageStore.getCurrentImage?.sourceImageFile();
       const distributionTimeUTC = sourceImageFile.distributionTimeUTC;
-      return distributionTimeUTC;
-    
+      return distributionTimeUTC;    
     } catch (error) {
       return -1;
     } 

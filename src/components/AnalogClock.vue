@@ -105,10 +105,10 @@
 
         // If the current minute is a multiple of 5, draw a thicker line
         if (num % 5 === 0) {
-            ctx.moveTo(0, -radius*0.9); // Start the line 2px inside the border
+            ctx.moveTo(0, -radius*0.95); // Start the line 2px inside the border
             ctx.lineWidth = 6;
         } else {
-            ctx.moveTo(0, -radius*0.92); // Start the line 2px inside the border
+            ctx.moveTo(0, -radius*0.97); // Start the line 2px inside the border
             ctx.lineWidth = 2;
         }
 
