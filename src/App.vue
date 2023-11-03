@@ -25,6 +25,7 @@ export default class ScreenSaverView extends Vue
     padding: 0;
     margin: 0;
 
+    color: white;
     background-color: black;
   }
 </style>
