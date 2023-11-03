@@ -1,157 +1,186 @@
 <template>
 
-  <div class="clock">
-    <div v-for="n in 60" :key="n" class="markings" :style="{ transform: `rotate(${n * 6 - 2}deg)` }">
-        <div :class="getTickMarkClass(n)"></div>
-    </div>
-    <div id="div-hour" ref="div-hour">
-        <div>
-        </div>
-    </div>
-    <div id="div-minute" ref="div-minute">
-        <div></div>
-    </div>
-    <div id="div-second" ref="div-second">
-        <div></div>
-    </div>
-    <span class="ctr"></span>
-  </div>
+    <canvas id="clock" ref="clock" :width="canvasWidth" :height="canvasHeight" :style="canvasStyle"></canvas>
    
 </template>
   
   <script lang="ts">
-  import { Component, Vue } from 'vue-facing-decorator';
+  import { Component, Prop, Vue } from 'vue-facing-decorator';
   /**https://www.prowaretech.com/articles/current/javascript/analog-clock#! */
   @Component
   export default class AnalogClock extends Vue {
-    private timer: number | undefined;
-  
+    timerReference!: number;
+    
+    @Prop({ default: 100 }) canvasWidth!: number;
+    @Prop({ default: 100 }) canvasHeight!: number;
+
+    @Prop({ default: "white" }) faceBackgroundColor!: string;
+    @Prop({ default: "white" }) faceBorderColor!: string;
+    
+    @Prop({ default: "black" }) minuteTicksColor!: string;
+
+    @Prop({ default: "black" }) numbersColor!: string;
+
+    @Prop({ default: "black" }) hoursHandColor!: string;
+    @Prop({ default: "black" }) minutesHandColor!: string;
+    @Prop({ default: "red" }) secondsHandColor!: string;
+    
+    @Prop({ default: "NO_TEXT" }) faceText!: string;
+    @Prop({ default: "16px Arial" }) faceTextSizeFont!: string;
+    @Prop({ default: "black" }) faceTextColor!: string;
+    
+    get canvasStyle() {
+        return {
+            width: this.canvasWidth + 'px',
+            height: this.canvasHeight + 'px',
+        };
+    }
+
     mounted() {
-      this.timer = setInterval(this.setDate, 1000);
-      this.setDate();
+      this.timerReference = setInterval(this.drawClock, 1000);
+      this.drawClock();
     }
   
     beforeUnmount() {
-      if (this.timer) {
-        clearInterval(this.timer);
+      if (this.timerReference) {
+        clearInterval(this.timerReference);
       }
     }
-  
-    setDate() {
-      const now = new Date();
-  
-      const seconds = now.getSeconds();
-      const secondsDegrees = ((seconds / 60) * 360) + 6.0;
-      (this.$refs['div-second'] as HTMLElement).style.transform = `rotate(${secondsDegrees - 2}deg)`;
-  
-      const mins = now.getMinutes();
-      const minsDegrees = ((mins / 60) * 360) + 6.0 * now.getSeconds() / 60;
-      (this.$refs['div-minute'] as HTMLElement).style.transform = `rotate(${minsDegrees - 2}deg)`;
-  
-      const hour = now.getHours();
-      const hourDegrees = ((hour / 12) * 360) + 30.0 * now.getMinutes() / 60;
-      (this.$refs['div-hour'] as HTMLElement).style.transform = `rotate(${hourDegrees - 2}deg)`;
+
+    private get clockCanvas(): HTMLCanvasElement {
+        const canvas = (this.$refs['clock'] as HTMLCanvasElement);
+        return canvas;
+    }
+    
+    private get clockRadius(): number {
+        const canvas = this.clockCanvas;
+        
+        const radius = canvas.height / 2 * 0.95;
+        return radius;
     }
 
-    getTickMarkClass(currentMinute: number): string {
-        let numberOfHours = 12;
-        const indexOffset = 1;
-        // Create an empty array of the defined size
-        let shouldHaveHourMarking = new Array(numberOfHours);
-        shouldHaveHourMarking = shouldHaveHourMarking.fill(0).map((_, index) => (index + indexOffset) * 60/12);
+    private get ctx():CanvasRenderingContext2D | null {
+        const canvas = (this.$refs['clock'] as HTMLCanvasElement);
+        const ctx = canvas.getContext('2d');
 
-        if (shouldHaveHourMarking.includes(currentMinute)) {
-            return "hour-marking";
+        // Set the radius of the clock
+        const radius = canvas.height / 2;
+        ctx?.translate(radius, radius);
+
+        return ctx;
+    }
+    
+    private drawClock() {
+      const ctx = this.ctx;
+      if (ctx) {
+        ctx.clearRect(-this.clockRadius, -this.clockRadius, this.clockCanvas.width, this.clockCanvas.height);
+        this.drawFace(ctx, this.clockRadius);
+        this.drawMinuteTicks(ctx, this.clockRadius); 
+        this.drawNumbers(ctx, this.clockRadius);
+        this.drawTime(ctx, this.clockRadius);
+        this.drawText(this.faceText, ctx, {x: 0, y: -this.clockRadius / 3.5});
+      }
+    }
+
+    private drawFace(ctx:CanvasRenderingContext2D, radius: number) {
+      ctx.beginPath();
+      ctx.arc(0, 0, radius, 0, 2*Math.PI);
+      
+      // Fill the circle with white color
+      ctx.fillStyle = this.faceBackgroundColor;
+      ctx.fill();
+      
+      // Draw the border
+      ctx.strokeStyle = this.faceBorderColor;
+      ctx.lineWidth = radius*0.1;
+      ctx.stroke();
+    }
+
+    private drawMinuteTicks(ctx:CanvasRenderingContext2D, radius: number) {
+      let ang;
+      for(let num = 0; num < 60; num++){
+        ang = num * Math.PI / 30;
+        ctx.beginPath();
+        ctx.rotate(ang);
+
+        // If the current minute is a multiple of 5, draw a thicker line
+        if (num % 5 === 0) {
+            ctx.moveTo(0, -radius*0.9); // Start the line 2px inside the border
+            ctx.lineWidth = 6;
         } else {
-            return "minute-marking";
+            ctx.moveTo(0, -radius*0.92); // Start the line 2px inside the border
+            ctx.lineWidth = 2;
         }
+
+        ctx.lineTo(0, -radius); // End the line at the border
+
+        ctx.strokeStyle = this.minuteTicksColor;
+        ctx.stroke();
+        ctx.rotate(-ang);
+      }    
+    }
+    
+    private drawNumbers(ctx:CanvasRenderingContext2D, radius: number) {
+      let ang;
+      let num;
+      ctx.font = radius*0.15 + "px arial";
+      ctx.textBaseline="middle";
+      ctx.textAlign="center";
+      ctx.fillStyle = this.numbersColor;
+      for(num = 1; num < 13; num++){
+        ang = num * Math.PI / 6;
+        ctx.rotate(ang);
+        ctx.translate(0, -radius*0.8);
+        ctx.rotate(-ang);
+        ctx.fillText(num.toString(), 0, 0);
+        ctx.rotate(ang);
+        ctx.translate(0, radius*0.8);
+        ctx.rotate(-ang);
+      }
+    }
+    
+    private drawTime(ctx:CanvasRenderingContext2D, radius: number){
+      let now = new Date();
+      let hour = now.getHours();
+      let minute = now.getMinutes();
+      let second = now.getSeconds();
+      //hour
+      hour=hour%12;
+      hour=(hour*Math.PI/6)+(minute*Math.PI/(6*60))+(second*Math.PI/(360*60));
+      this.drawHand(ctx, hour, radius*0.5, radius*0.07, this.hoursHandColor);
+      //minute
+      minute=(minute*Math.PI/30)+(second*Math.PI/(30*60));
+      this.drawHand(ctx, minute, radius*0.8, radius*0.07, this.minutesHandColor);
+      // second
+      second=(second*Math.PI/30);
+      this.drawHand(ctx, second, radius*0.9, radius*0.02, this.secondsHandColor);
+    }
+
+    private drawHand(ctx, pos, length, width, color) {
+      ctx.beginPath();
+      ctx.lineWidth = width;
+      ctx.lineCap = "round";
+      ctx.strokeStyle = color;
+      ctx.moveTo(0,0);
+      ctx.rotate(pos);
+      ctx.lineTo(0, -length);
+      ctx.stroke();
+      ctx.rotate(-pos);
+    }
+
+    private drawText(text: string, ctx: CanvasRenderingContext2D, pos: {x: number, y: number}) {
+      ctx.font = this.faceTextSizeFont;
+      ctx.fillStyle = this.faceTextColor;
+      ctx.fillText(text, pos.x, pos.y);
     }
   }
   </script>
   
 <style scoped>
-    .clock {
-        position: relative;
-        overflow: hidden;
-        background-color: white;
-        height: 25vmin;
-        width: 25vmin;
-        border-radius: 50%;
-
-        border:1px solid black;  
-
-    }
-    .clock div {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-        background-color: transparent;
-    }
-    .clock div div {
-        left: 50%;
-        width: 0;
-    }
-    .clock span {
-        position: absolute;
-    }
-    .clock .ctr {
-        width: 6%;
-        height: 6%;
-        border-radius: 50%;
-        left: 50%;
-        top: 50%;
-        transform: translate(-50%, -50%);
-        background-color: black;
-    }
-
-    #div-hour div {
-        top: 20%;
-        height: 35%;
-        border-left: 4px solid black;
-        margin-left: -1px;
-    }
-
-    #div-minute div {
-        top: 10%;
-        height: 45%;
-        border-left: 4px solid black;
-        margin-left: -1px;
-    }
-
-    #div-second div {
-        top: 5%;
-        height: 45%;
-        border-left: 2px solid red;
-    }
-
-    .markings {
-        position: absolute;
-        top: 0;
-        left: 0;
-        height: 100%;
-        width: 100%;
-    }
-
-    .markings div {
-        position: absolute;
-        bottom: 50%;
-        left: 50%;
-        width: 4px;
-        height: 2%;
-        margin-top: 1px;
-    }
-
-    .hour-marking {
-        background-color: black;
-        border: 3px solid black;
-    }
-
-    .minute-marking {
-        background-color: gray;
-        border: 1px solid gray;
-
-    }
+  #clock {
+    background-color: inherit;
+    display: block;
+    margin: 0 auto;
+  }
 
 </style>

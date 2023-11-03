@@ -1,6 +1,18 @@
 <template>
-	<h3>{{ getDate() }}</h3>
-    <analog-clock></analog-clock>
+    <analog-clock 
+      :canvasWidth="250" 
+      :canvasHeight="250" 
+      :faceBackgroundColor="'white'" 
+      :faceBorderColor="'white'" 
+      :minuteTicksColor="'black'" 
+      :numbersColor="'black'" 
+      :hoursHandColor="'black'" 
+      :minutesHandColor="'black'"
+      :secondsHandColor="'red'"
+      :faceText="clockText()"
+      :faceTextSizeFont="'16px Arial'"
+      :faceTextColor="'black'"
+      ></analog-clock>
    
 </template>
   
@@ -16,10 +28,10 @@
 	})
   export default class TimeAndDate extends Vue {
 
-	getDate(): string {
-        const dateString = moment().format('dddd, YYYY-MM-DD, [week] ww');
-		return dateString;
-    }
+	clockText(): string {
+    const text = moment().format('ddd D MMM, \n[w] ww');
+		return text;
+  }
 
   }
   </script>
