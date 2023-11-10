@@ -1,7 +1,6 @@
 <template>
-    <analog-clock 
-      :canvasWidth="250" 
-      :canvasHeight="250" 
+    <analog-clock
+      :canvasHeight="150" 
       :faceBackgroundColor="'white'" 
       :faceBorderColor="'white'" 
       :minuteTicksColor="'black'" 
@@ -9,9 +8,9 @@
       :hoursHandColor="'black'" 
       :minutesHandColor="'black'"
       :secondsHandColor="'red'"
-      :faceText="clockText()"
-      :faceTextSizeFont="'16px Arial'"
-      :faceTextColor="'black'"
+      :topText="dateText()"
+      :bottomText="currentWeekText()"
+      :textColor="'black'"
       ></analog-clock>
     <transport></transport>
 </template>
@@ -29,10 +28,15 @@
 	})
   export default class TimeAndDate extends Vue {
 
-	clockText(): string {
-    const text = moment().format('ddd D MMM, \n[w] ww');
-		return text;
-  }
+    dateText(): string {
+      const text = moment().format('ddd D MMM');
+      return text;
+    }
+
+    currentWeekText(): string {
+      const text = moment().format('[w] ww');
+      return text;
+    }
 
   }
   </script>

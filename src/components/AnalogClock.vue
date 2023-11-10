@@ -11,8 +11,9 @@
   export default class AnalogClock extends Vue {
     timerReference!: number;
     
-    @Prop({ default: 100 }) canvasWidth!: number;
     @Prop({ default: 100 }) canvasHeight!: number;
+    // @Prop({ default: 100 }) canvasWidth!: number;
+    canvasWidth = this.canvasHeight;
 
     @Prop({ default: "white" }) faceBackgroundColor!: string;
     @Prop({ default: "white" }) faceBorderColor!: string;
@@ -25,9 +26,9 @@
     @Prop({ default: "black" }) minutesHandColor!: string;
     @Prop({ default: "red" }) secondsHandColor!: string;
     
-    @Prop({ default: "NO_TEXT" }) faceText!: string;
-    @Prop({ default: "16px Arial" }) faceTextSizeFont!: string;
-    @Prop({ default: "black" }) faceTextColor!: string;
+    @Prop({ default: "NO_TOP_TEXT" }) topText!: string;
+    @Prop({ default: "NO_BOTTOM_TEXT" }) bottomText!: string;
+    @Prop({ default: "black" }) textColor!: string;
     
     get canvasStyle() {
         return {
@@ -78,7 +79,8 @@
         this.drawMinuteTicks(ctx, this.clockRadius); 
         this.drawNumbers(ctx, this.clockRadius);
         this.drawTime(ctx, this.clockRadius);
-        this.drawText(this.faceText, ctx, {x: 0, y: -this.clockRadius / 3.5});
+        this.drawText(this.topText, ctx, {x: 0, y: -this.clockRadius / 3.5}, this.clockRadius);
+        this.drawText(this.bottomText, ctx, {x: 0, y: this.clockRadius / 3.5}, this.clockRadius);
       }
     }
 
@@ -123,18 +125,18 @@
     private drawNumbers(ctx:CanvasRenderingContext2D, radius: number) {
       let ang;
       let num;
-      ctx.font = radius*0.15 + "px arial";
+      ctx.font = "bold " + radius*0.2 + "px arial";
       ctx.textBaseline="middle";
       ctx.textAlign="center";
       ctx.fillStyle = this.numbersColor;
       for(num = 1; num < 13; num++){
         ang = num * Math.PI / 6;
         ctx.rotate(ang);
-        ctx.translate(0, -radius*0.8);
+        ctx.translate(0, -radius*0.75);
         ctx.rotate(-ang);
         ctx.fillText(num.toString(), 0, 0);
         ctx.rotate(ang);
-        ctx.translate(0, radius*0.8);
+        ctx.translate(0, radius*0.75);
         ctx.rotate(-ang);
       }
     }
@@ -168,9 +170,9 @@
       ctx.rotate(-pos);
     }
 
-    private drawText(text: string, ctx: CanvasRenderingContext2D, pos: {x: number, y: number}) {
-      ctx.font = this.faceTextSizeFont;
-      ctx.fillStyle = this.faceTextColor;
+    private drawText(text: string, ctx: CanvasRenderingContext2D, pos: {x: number, y: number}, radius: number) {
+      ctx.font = radius*0.175 + "px arial";
+      ctx.fillStyle = this.textColor;
       ctx.fillText(text, pos.x, pos.y);
     }
   }

@@ -17,6 +17,11 @@ import ServiceMqttHomeAssistant from './components/ServiceMqttHomeAssistant.vue'
 })
 export default class ScreenSaverView extends Vue 
 {
+  mounted() {
+    window.addEventListener('resize', () => {
+      this.$forceUpdate();
+    });
+  }
 }
 
 </script>
