@@ -20,7 +20,8 @@ export const mqttConfig /*: IClientOptions*/ = {
       "climate_sjöstorpsvägen_3a": "climate/sjöstorpsvägen_3a",
       "image_screensaver": "image/screensaver",
       "sound_play_file": "sound/play/file",
-      "transport_departure": "transport/departure"
+      "transport_departure": "transport/departure",
+      "calendars": "calendars"
     }
   }
   

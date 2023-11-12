@@ -17,13 +17,15 @@ export default class ServiceMqttHomeAssistant extends Vue {
     private mqttStore = useMqttStore();
 
     private readonly topicsForSubscription = 
-        [mqttConfig.topic.climate_utilityRoomFloor,
-        mqttConfig.topic.climate_mainThermostat,
-        mqttConfig.topic.climate_outdoorRoom,
-        mqttConfig.topic.climate_sjöstorpsvägen_3a,
-        mqttConfig.topic.image_screensaver,
-        mqttConfig.topic.sound_play_file,
-        mqttConfig.topic.transport_departure];
+        [
+            mqttConfig.topic.calendars,
+            mqttConfig.topic.climate_utilityRoomFloor,
+            mqttConfig.topic.climate_mainThermostat,
+            mqttConfig.topic.climate_outdoorRoom,
+            mqttConfig.topic.climate_sjöstorpsvägen_3a,
+            mqttConfig.topic.image_screensaver,
+            mqttConfig.topic.sound_play_file,
+            mqttConfig.topic.transport_departure];
 
     private connect() {
         const clientId = `mqtt_${Math.random().toString(16).slice(3)}`

@@ -1,9 +1,11 @@
 import { defineStore } from 'pinia';
 
+import type ICalendar from '../interfaces/iCalendar';
 import type IMqttMessage from '../interfaces/iMqttMessage';
 import { mqttConfig } from '../mqtt.config';
 import Image from '@/helpers/image';
 
+import { useCalendarStore } from '@/stores/calendarStore'
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { useDepartureStore } from '@/stores/departureStore'
 
@@ -16,6 +18,7 @@ export const useMqttStore = defineStore({
   id: 'mqtt',
   state: () => ({    
     topicsAndMessages: new Map([
+      [mqttConfig.topic.calendars, initialMessage],
       [mqttConfig.topic.climate_utilityRoomFloor, initialMessage],
       [mqttConfig.topic.climate_mainThermostat, initialMessage],
       [mqttConfig.topic.climate_outdoorRoom, initialMessage],
@@ -47,6 +50,29 @@ export const useMqttStore = defineStore({
         const jSONMessage = JSON.parse(payload.message);
 
         switch (topic) {
+            case mqttConfig.topic.calendars:{
+              
+              const calendarStore = useCalendarStore();
+              const currentCalendars: Array<ICalendar> = jSONMessage.map((c) => {
+                return {
+                  name: c.name,
+                  entity_id: c.entity_id,
+                  url: c.url,                  
+                  events: c.events.map((e) => {
+                    const current =  {
+                      start: new Date(e.start.dateTime ? e.start.dateTime : e.start.date),
+                      end: new Date(e.end.dateTime ? e.end.dateTime : e.end.date),
+                      summary: e.summary,
+                      description: e.description,
+                      location: e.location
+                    };
+                    return current;
+                  })
+                };
+              });
+              calendarStore.updateCalendars(currentCalendars);
+              break;
+            }
             case mqttConfig.topic.climate_utilityRoomFloor:
                 break;
             case mqttConfig.topic.climate_mainThermostat:

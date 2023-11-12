@@ -5,7 +5,7 @@
     </div>
     
     <div>
-        <img :src="imgSrc" alt="">
+        <calendar></calendar>
     </div>
     
     <div>
@@ -23,12 +23,14 @@
 import { Component, Watch, Vue } from 'vue-facing-decorator';
 import StatusIndicator from '../components/StatusIndicator.vue';
 import TimeAndDate from '../components/TimeAndDate.vue';
+import Calendar from '../components/Calendar.vue';
 
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { castArray } from 'lodash';
 
 @Component({ 
   components: {
+    Calendar,
     StatusIndicator,
     TimeAndDate
   } 
