@@ -20,7 +20,6 @@ export const useMqttStore = defineStore({
     topicsAndMessages: new Map([
       [mqttConfig.topic.calendars, initialMessage],
       [mqttConfig.topic.climate_utilityRoomFloor, initialMessage],
-      [mqttConfig.topic.climate_mainThermostat, initialMessage],
       [mqttConfig.topic.climate_outdoorRoom, initialMessage],
       [mqttConfig.topic.climate_sjöstorpsvägen_3a, initialMessage],
       [mqttConfig.topic.image_screensaver, initialMessage],
@@ -74,8 +73,6 @@ export const useMqttStore = defineStore({
               break;
             }
             case mqttConfig.topic.climate_utilityRoomFloor:
-                break;
-            case mqttConfig.topic.climate_mainThermostat:
                 break;
             case mqttConfig.topic.climate_outdoorRoom:
                 break;

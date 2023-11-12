@@ -20,7 +20,6 @@ export default class ServiceMqttHomeAssistant extends Vue {
         [
             mqttConfig.topic.calendars,
             mqttConfig.topic.climate_utilityRoomFloor,
-            mqttConfig.topic.climate_mainThermostat,
             mqttConfig.topic.climate_outdoorRoom,
             mqttConfig.topic.climate_sjöstorpsvägen_3a,
             mqttConfig.topic.image_screensaver,

@@ -15,7 +15,6 @@ export const mqttConfig /*: IClientOptions*/ = {
     },
     "topic": {
       "climate_utilityRoomFloor": "climate/grovkök_golv",
-      "climate_mainThermostat": "climate/huvudtermostat",
       "climate_outdoorRoom": "climate/uterum",
       "climate_sjöstorpsvägen_3a": "climate/sjöstorpsvägen_3a",
       "image_screensaver": "image/screensaver",

@@ -1,20 +1,23 @@
 <template>
   <div class="container">
     <div>
-        <img :src="imgSrc" alt="">
-    </div>
-    
-    <div>
-        <calendar></calendar>
-    </div>
-    
-    <div>
+      <div>
+        <img class="screen-saver-image" :src="imgSrc" alt="">
+      </div>
+      <div>
         <time-and-date></time-and-date>
+      </div>
     </div>
     
     <div>
-        <img :src="imgSrc" alt="">
+      <div>   
+      </div>
+      
+      <div>
+        <calendar></calendar>
+      </div>      
     </div>
+
     
   </div>
 </template>
@@ -70,21 +73,31 @@ export default class ScreenSaverView extends Vue
 <style scoped>
 
 .container {
-    display: flex;
-    flex-wrap: wrap;
-    height: 100vh;
-    width: 100vw;
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  width: 100vw;
 }
 
-.container>div {
-  flex: 50%;
-      max-height: 49vh;
-  box-shadow: 0 0 0 1px black;
+.container > div {
+  display: flex;
+  flex-direction: row;
+}
+
+.container > div > div {
+  flex: 1;
+  display: flex;
+  width: 50vw;
+  max-width: 50vw;
+  height: 50vh;
+  max-height: 50vh;
+  justify-content: center;
+  align-items: center;
+  border: 1px solid white;
 }
     img {
-      width: 100%;
+      width: auto;
       height: 100%;
-      object-fit: contain;
     }
 
 
