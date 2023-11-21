@@ -80,7 +80,7 @@ export const useMqttStore = defineStore({
                 break;
             case mqttConfig.topic.image_screensaver: {
               const actualHostSrcImage = 
-                `http://${mqttConfig.connection.hostname}:8123/local/kommandoran/screensaver_image.jpg`;
+                `http://${mqttConfig.connection.hostname}:1880/endpoint/kommandoran/screensaverImage`;
               const screenSaverImageStore = useScreenSaverImageStore();
               
               const sourceImage = 
