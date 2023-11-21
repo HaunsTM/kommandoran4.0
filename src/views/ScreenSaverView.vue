@@ -1,25 +1,25 @@
 <template>
-  <div class="container">
-    <div>
-      <div>
-        <img class="screen-saver-image" :src="imgSrc" alt="">
-      </div>
-      <div>
+  <v-container fluid class="pa-0">
+    <v-row no-gutters class="fill-height">
+      <v-col cols="6" class="half-screen d-flex align-center justify-center">
+        <!-- Content for first column in first row goes here -->
+        <img class="screen-saver-image " :src="imgSrc" alt="">
+      </v-col>
+      <v-col cols="6" class="half-screen">
+        <!-- Content for second column in first row goes here -->
         <time-and-date></time-and-date>
-      </div>
-    </div>
-    
-    <div>
-      <div>   
-      </div>
-      
-      <div>
+      </v-col>
+    </v-row>
+    <v-row no-gutters class="fill-height">
+      <v-col cols="6" class="half-screen">
+        <!-- Content for first column in second row goes here -->
+      </v-col>
+      <v-col cols="6" class="half-screen">
+        <!-- Content for second column in second row goes here -->
         <calendar></calendar>
-      </div>      
-    </div>
-
-    
-  </div>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
 
 <script lang="ts">
@@ -70,36 +70,15 @@ export default class ScreenSaverView extends Vue
 
 </script>
 
+
 <style scoped>
-
-.container {
-  display: flex;
-  flex-direction: column;
-  height: 100vh;
-  width: 100vw;
+.screen-saver-image {
+  max-width: 100%;
+  max-height: 100%;
+  object-fit: contain;
 }
-
-.container > div {
-  display: flex;
-  flex-direction: row;
-}
-
-.container > div > div {
-  flex: 1;
-  display: flex;
-  width: 50vw;
-  max-width: 50vw;
+.half-screen {
   height: 50vh;
-  max-height: 50vh;
-  justify-content: center;
-  align-items: center;
-  border: 1px solid white;
+  width: 50vw;
 }
-    img {
-      width: auto;
-      height: 100%;
-    }
-
-
-    
 </style>

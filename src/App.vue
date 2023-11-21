@@ -1,6 +1,18 @@
-<template>
-  <div>    
-    <router-view/>
+<template>  
+  <div>
+    
+    <v-app>
+      <!-- Sizes your content based upon application components -->
+      <v-main>
+
+        <!-- Provides the application the proper gutter -->
+        <v-container fluid>
+
+          <!-- If using vue-router -->
+          <router-view/>
+        </v-container>
+      </v-main>
+    </v-app>
     <service-mqtt-home-assistant></service-mqtt-home-assistant>
   </div>
 </template>
@@ -26,11 +38,13 @@ export default class ScreenSaverView extends Vue
 
 </script>
 <style>
-  div {
+  v-app {
     padding: 0;
     margin: 0;
-
-    color: white;
-    background-color: black;
+    
+    height: 100vh;
+    width: 100vw;
+    max-height: 100vh;
+    max-width: 100vw;
   }
 </style>
