@@ -1,6 +1,5 @@
 import { defineStore } from 'pinia';
 import ICalendar from '@/interfaces/iCalendar';
-import ICalendarEvent from '@/interfaces/iCalendarEvent';
 
 export const useCalendarStore = defineStore({
   id: 'calendar',

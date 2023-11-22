@@ -59,8 +59,8 @@ export const useMqttStore = defineStore({
                   url: c.url,                  
                   events: c.events.map((e) => {
                     const current =  {
-                      start: new Date(e.start.dateTime ? e.start.dateTime : e.start.date),
-                      end: new Date(e.end.dateTime ? e.end.dateTime : e.end.date),
+                      start: new Date(e.start.dateTime),
+                      end: new Date(e.end.dateTime),
                       summary: e.summary,
                       description: e.description,
                       location: e.location
