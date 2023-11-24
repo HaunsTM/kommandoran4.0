@@ -8,6 +8,7 @@
     "lint": "vue-cli-service lint"
   },
   "dependencies": {
+    "@mdi/font": "^7.3.67",
     "@mdi/js": "^7.3.67",
     "@types/paho-mqtt": "^1.0.8",
     "core-js": "^3.8.3",

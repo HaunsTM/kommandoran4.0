@@ -5,9 +5,11 @@ import type IMqttMessage from '../interfaces/iMqttMessage';
 import { mqttConfig } from '../mqtt.config';
 import Image from '@/helpers/image';
 
-import { useCalendarStore } from '@/stores/calendarStore'
-import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
-import { useDepartureStore } from '@/stores/departureStore'
+import { useCalendarStore } from '@/stores/calendarStore';
+import { useHeatingSystemStore } from '@/stores/heatingSystemStore';
+import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore';
+import { useDepartureStore } from '@/stores/departureStore';
+import { useWeatherStore } from '@/stores/weatherStore';
 
 const initialMessage:IMqttMessage = {
   timeReceived: -1,
@@ -19,12 +21,10 @@ export const useMqttStore = defineStore({
   state: () => ({    
     topicsAndMessages: new Map([
       [mqttConfig.topic.calendars, initialMessage],
-      [mqttConfig.topic.climate_utilityRoomFloor, initialMessage],
-      [mqttConfig.topic.climate_outdoorRoom, initialMessage],
-      [mqttConfig.topic.climate_sjöstorpsvägen_3a, initialMessage],
+      [mqttConfig.topic.heatingSystem, initialMessage],
       [mqttConfig.topic.image_screensaver, initialMessage],
-      [mqttConfig.topic.sound_play_file, initialMessage],
-      [mqttConfig.topic.transport_departure, initialMessage]
+      [mqttConfig.topic.transport_departure, initialMessage],      
+      [mqttConfig.topic.weather, initialMessage],
     ]) as Map<string, IMqttMessage>,
     lastRecievedMqttMessage: -1 as number
   }),
@@ -72,12 +72,11 @@ export const useMqttStore = defineStore({
               calendarStore.updateCalendars(currentCalendars);
               break;
             }
-            case mqttConfig.topic.climate_utilityRoomFloor:
-                break;
-            case mqttConfig.topic.climate_outdoorRoom:
-                break;
-            case mqttConfig.topic.climate_sjöstorpsvägen_3a:
-                break;
+            case mqttConfig.topic.heatingSystem: {
+              const heatingSystemStore = useHeatingSystemStore();
+              heatingSystemStore.updateHeatingSystemValue(jSONMessage.entity_id, jSONMessage);
+              break;
+            }
             case mqttConfig.topic.image_screensaver: {
               const actualHostSrcImage = 
                 `http://${mqttConfig.connection.hostname}:1880/endpoint/kommandoran/screensaverImage`;
@@ -93,14 +92,17 @@ export const useMqttStore = defineStore({
 
               break;
             }
-            case mqttConfig.topic.sound_play_file:
-                break;
             case mqttConfig.topic.transport_departure: {
               const departureStore = useDepartureStore();
               const lines = jSONMessage.lines;
               departureStore.updateLines(lines);
               break;
-            }                
+            }            
+            case mqttConfig.topic.weather: {
+              const weatherStore = useWeatherStore();
+              weatherStore.updateWeather(jSONMessage);
+              break;
+            } 
             default:
         }
 

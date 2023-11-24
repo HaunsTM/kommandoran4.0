@@ -14,13 +14,11 @@ export const mqttConfig /*: IClientOptions*/ = {
       } as ConnectionOptions      
     },
     "topic": {
-      "climate_utilityRoomFloor": "climate/grovkök_golv",
-      "climate_outdoorRoom": "climate/uterum",
-      "climate_sjöstorpsvägen_3a": "climate/sjöstorpsvägen_3a",
+      "calendars": "calendars",
+      "heatingSystem": "heatingSystem",
       "image_screensaver": "image/screensaver",
-      "sound_play_file": "sound/play/file",
       "transport_departure": "transport/departure",
-      "calendars": "calendars"
+      "weather": "weather"
     }
   }
   

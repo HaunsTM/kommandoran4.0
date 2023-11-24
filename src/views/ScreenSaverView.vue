@@ -13,6 +13,7 @@
     <v-row no-gutters class="fill-height">
       <v-col cols="6" class="half-screen">
         <!-- Content for first column in second row goes here -->
+        <climate></climate>
       </v-col>
       <v-col cols="6" class="half-screen">
         <!-- Content for second column in second row goes here -->
@@ -27,6 +28,7 @@ import { Component, Watch, Vue } from 'vue-facing-decorator';
 import StatusIndicator from '../components/StatusIndicator.vue';
 import TimeAndDate from '../components/TimeAndDate.vue';
 import Calendar from '../components/Calendar.vue';
+import Climate from '../components/Climate.vue';
 
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore'
 import { castArray } from 'lodash';
@@ -34,6 +36,7 @@ import { castArray } from 'lodash';
 @Component({ 
   components: {
     Calendar,
+    Climate,
     StatusIndicator,
     TimeAndDate
   } 
