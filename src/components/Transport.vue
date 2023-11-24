@@ -1,7 +1,7 @@
 <template>
   <div>
     <h2>
-      Transport
+      Bus
     </h2>
     <v-table>
       <thead>
