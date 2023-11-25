@@ -15,10 +15,12 @@ export const mqttConfig /*: IClientOptions*/ = {
     },
     "topic": {
       "calendars": "calendars",
-      "heatingSystem": "heatingSystem",
+      "climate_heatingSystem_henHouse": "climate/heatingSystem/henHouse",
+      "climate_heatingSystem_house": "climate/heatingSystem/house",
+      "climate_heatingSystem_house_outdoorRoom": "climate/heatingSystem/house/outdoorRoom",
+      "climate_weather": "climate/weather",
       "image_screensaver": "image/screensaver",
-      "transport_departure": "transport/departure",
-      "weather": "weather"
+      "transport_departure": "transport/departure"
     }
   }
   

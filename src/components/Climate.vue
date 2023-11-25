@@ -4,15 +4,6 @@
     max-width="368"
   >
     <v-card-item title="Home">
-      <template v-slot:subtitle>
-        <v-icon
-          icon="mdi-alert"
-          size="18"
-          class="me-1 pb-1"
-        ></v-icon>
-
-        Extreme Weather Alert
-      </template>
     </v-card-item>
 
     <v-card-text class="py-0">
@@ -20,16 +11,30 @@
         <v-col cols="6">
           <v-row align="center" no-gutters>
             <v-col cols="6">Home</v-col>
-            <v-col cols="6">{{heatingSystemStats(1).mean}}&nbsp;&deg;C</v-col>
+            <v-col cols="6">{{currentClimateHeatingSystemsHouse(1).mean}}&nbsp;&deg;C</v-col>
           </v-row>
         </v-col>
 
-        <v-col cols="6" class="text-right">
-          <v-icon
-            color="error"
-            icon="mdi-thermometer"
-            size="88"
-          ></v-icon>
+        <v-col cols="6">
+          <v-row align="center" no-gutters>
+            <v-col cols="6">Hen house</v-col>
+            <v-col cols="6">{{currentClimateHeatingSystemHenHouse(1).mean}}&nbsp;&deg;C</v-col>
+          </v-row>
+        </v-col>
+      </v-row>
+      <v-row align="center" no-gutters>
+        <v-col cols="6">
+          <v-row align="center" no-gutters>
+            <v-col cols="6">Outdoor room</v-col>
+            <v-col cols="6">{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</v-col>
+          </v-row>
+        </v-col>
+
+        <v-col cols="6">
+          <v-row align="center" no-gutters>
+            <v-col cols="6"></v-col>
+            <v-col cols="6"></v-col>
+          </v-row>
         </v-col>
       </v-row>
     </v-card-text>
@@ -55,15 +60,6 @@
     max-width="368"
   >
     <v-card-item title="Weather">
-      <template v-slot:subtitle>
-        <v-icon
-          icon="mdi-alert"
-          size="18"
-          class="me-1 pb-1"
-        ></v-icon>
-
-        Extreme Weather Alert
-      </template>
     </v-card-item>
 
     <v-card-text class="py-0">
@@ -76,27 +72,27 @@
           <tbody>
             <tr>
               <td><v-icon icon="mdi-thermometer-lines"></v-icon></td>
-              <td>{{currentWeather.attributes.temperature}}</td>
-              <td>{{currentWeather.attributes.temperature_unit}}</td>
+              <td>{{currentClimateWeather.attributes?.temperature}}</td>
+              <td>{{currentClimateWeather.attributes?.temperature_unit}}</td>
             </tr>
             <tr>
               <td><v-icon icon="mdi-water-percent"></v-icon></td>
-              <td>{{currentWeather.attributes.humidity}}</td>
+              <td>{{currentClimateWeather.attributes?.humidity}}</td>
               <td>%</td>
             </tr>
             <tr>
               <td><v-icon icon="mdi-gauge-empty"></v-icon></td>
-              <td>{{currentWeather.attributes.pressure}}</td>
-              <td>{{currentWeather.attributes.pressure_unit}}</td>
+              <td>{{currentClimateWeather.attributes?.pressure}}</td>
+              <td>{{currentClimateWeather.attributes?.pressure_unit}}</td>
             </tr>
             <tr>
               <td><v-icon icon="mdi-weather-windy"></v-icon></td>
-              <td>{{roundNumber(currentWeather.attributes.wind_speed, 1)}} ({{roundNumber(currentWeather.attributes.wind_gust_speed, 1)}})</td>
-              <td>{{currentWeather.attributes.wind_speed_unit}}</td>
+              <td>{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}} ({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}})</td>
+              <td>{{currentClimateWeather.attributes?.wind_speed_unit}}</td>
             </tr>
             <tr>
               <td><v-icon icon="mdi-compass"></v-icon></td>
-              <td>{{degreesToCompass(currentWeather.attributes.wind_bearing)}}</td>
+              <td>{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}</td>
             </tr>
           </tbody>
         </v-table>
@@ -122,10 +118,10 @@
 
 <script lang="ts">
 import { Component, Vue } from 'vue-facing-decorator';
-import { useHeatingSystemStore } from '../stores/heatingSystemStore';
+import { useClimateHeatingSystemStore } from '../stores/climateHeatingSystemStore';
 import IHeatingSystemDictionary from '@/interfaces/iHeatingSystemDictionary';
-import { useWeatherStore } from '../stores/weatherStore';
-import IWeather from '@/interfaces/iWeather';
+import { useClimateWeatherStore } from '../stores/climateWeatherStore';
+import IClimateWeather from '@/interfaces/IClimateWeather';
 
 @Component({
     components: {
@@ -133,11 +129,22 @@ import IWeather from '@/interfaces/iWeather';
 })
 export default class Climate extends Vue {
     
-  private readonly heatingSystemStore = useHeatingSystemStore();
-  private readonly weatherStore = useWeatherStore();
+  private readonly climateHeatingSystemStore = useClimateHeatingSystemStore();
+  private readonly climateWeatherStore = useClimateWeatherStore();
 
-  public get currentHeatingSystems(): IHeatingSystemDictionary {
-      return this.heatingSystemStore.getCurrentHeatingSystems;
+  public currentClimateHeatingSystemHenHouse(numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
+    const heatingSystemStats = this.heatingSystemStats(this.climateHeatingSystemStore.getCurrentHenHouse, numberOfDecimals);
+    return heatingSystemStats;
+  }
+
+  public currentClimateHeatingSystemsHouse(numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
+    const heatingSystemStats = this.heatingSystemStats(this.climateHeatingSystemStore.getCurrentHouse, numberOfDecimals);
+    return heatingSystemStats;
+  }
+  
+  public currentClimateHeatingSystemOutdoorRoom(numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
+    const heatingSystemStats = this.heatingSystemStats( this.climateHeatingSystemStore.getCurrentOutdoorRoom, numberOfDecimals);
+    return heatingSystemStats;
   }
 
   roundNumber(num: number, dec: number) {
@@ -145,29 +152,30 @@ export default class Climate extends Vue {
   }
 
   // Original function with rounding
-  heatingSystemStats(numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
+  heatingSystemStats(heatingSystemsProxy : IHeatingSystemDictionary, numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
 
-      const heatingSystems = Object.values(this.currentHeatingSystems);
-      const temperatures = heatingSystems.map(system => system.attributes.current_temperature);
-      const totalTemperature = temperatures.reduce((a, b) => a + b, 0);
-      const meanTemperature = this.roundNumber(totalTemperature / temperatures.length, numberOfDecimals);
-      const maxTemperature = this.roundNumber(Math.max(...temperatures), numberOfDecimals);
-      const minTemperature = this.roundNumber(Math.min(...temperatures), numberOfDecimals);
-      temperatures.sort((a, b) => a - b);
-      const lowerQuantile = this.roundNumber(temperatures[Math.floor((temperatures.length * 0.025))], numberOfDecimals);
-      const upperQuantile = this.roundNumber(temperatures[Math.ceil((temperatures.length * 0.975)) - 1], numberOfDecimals);
-      const confidenceInterval : [number, number] = [lowerQuantile, upperQuantile];
+    const heatingSystems = Object.values(heatingSystemsProxy);
+    const temperatures = heatingSystems.map(system => system.attributes.current_temperature);
+    const totalTemperature = temperatures.reduce((a, b) => a + b, 0);
+    const meanTemperature = this.roundNumber(totalTemperature / temperatures.length, numberOfDecimals);
+    const maxTemperature = this.roundNumber(Math.max(...temperatures), numberOfDecimals);
+    const minTemperature = this.roundNumber(Math.min(...temperatures), numberOfDecimals);
+    temperatures.sort((a, b) => a - b);
+    const lowerQuantile = this.roundNumber(temperatures[Math.floor((temperatures.length * 0.025))], numberOfDecimals);
+    const upperQuantile = this.roundNumber(temperatures[Math.ceil((temperatures.length * 0.975)) - 1], numberOfDecimals);
+    const confidenceInterval : [number, number] = [lowerQuantile, upperQuantile];
 
-      return {
-          mean: meanTemperature,
-          max: maxTemperature,
-          min: minTemperature,
-          confidenceInterval: confidenceInterval
-      };
+    return {
+        mean: meanTemperature,
+        max: maxTemperature,
+        min: minTemperature,
+        confidenceInterval: confidenceInterval
+    };
+
   }
 
-  public get currentWeather(): IWeather {
-      return this.weatherStore.getCurrentWeather;
+  public get currentClimateWeather(): IClimateWeather {
+    return this.climateWeatherStore.getCurrentClimateWeather;
   }
 
   degreesToCompass(degrees: number): string {

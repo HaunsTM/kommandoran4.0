@@ -19,10 +19,12 @@ export default class ServiceMqttHomeAssistant extends Vue {
     private readonly topicsForSubscription = 
         [
             mqttConfig.topic.calendars,
-            mqttConfig.topic.heatingSystem,
+            mqttConfig.topic.climate_heatingSystem_henHouse,
+            mqttConfig.topic.climate_heatingSystem_house,
+            mqttConfig.topic.climate_heatingSystem_house_outdoorRoom,
+            mqttConfig.topic.climate_weather,
             mqttConfig.topic.image_screensaver,
-            mqttConfig.topic.transport_departure,            
-            mqttConfig.topic.weather
+            mqttConfig.topic.transport_departure,
         ];
 
     private connect() {
