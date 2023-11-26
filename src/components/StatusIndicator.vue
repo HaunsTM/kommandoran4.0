@@ -12,7 +12,6 @@
 <script lang="ts">
 
 import { mdiHeart } from '@mdi/js';
-import moment from "moment";
 
 import { Component, Vue, Watch } from 'vue-facing-decorator';
 import { useMqttStore } from '../stores/mqttStore';
@@ -101,10 +100,10 @@ export default class StatusIndicator extends Vue {
     }
 
     private updateSecondsSinceLastMQTTReceived() {
-        const lastMQTTReceived = moment(this.storedMQTTReceived);
-        const now = moment(new Date());
-        const duration = moment.duration(now.diff(lastMQTTReceived));
-        const seconds = duration.asSeconds();
+        const lastMQTTReceived = new Date(this.storedMQTTReceived).getTime();
+        const now = new Date().getTime();
+        const duration = now - lastMQTTReceived;
+        const seconds = duration / 1000;
         const secondsRounded = Math.round(seconds);
 
         this.secondsSinceLastMQTTReceived = secondsRounded.toString();

@@ -13,11 +13,11 @@
     "@types/paho-mqtt": "^1.0.8",
     "core-js": "^3.8.3",
     "lodash": "^4.17.21",
-    "moment": "^2.29.4",
     "paho-mqtt": "^1.1.0",
     "pinia": "^2.1.6",
     "vue": "^3.2.13",
     "vue-facing-decorator": "^3.0.3",
+    "vue-marquee-slider": "^1.0.6",
     "vue-router": "^4.0.3",
     "vuetify": "^3.4.2"
   },
