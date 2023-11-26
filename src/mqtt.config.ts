@@ -21,6 +21,7 @@ export const mqttConfig /*: IClientOptions*/ = {
       "climate_weather": "climate/weather",
       "image_screensaver": "image/screensaver",
       "sensor_henHouse_hatch_lidar_data_distanceCm": "sensor/henHouse/hatch/lidar/data/distanceCm",
+      "sensor_henHouse_heatLamp": "sensor/henHouse/heatLamp",
       "settings": "settings",
       "transport_departure": "transport/departure"
     }

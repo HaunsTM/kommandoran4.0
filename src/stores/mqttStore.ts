@@ -29,6 +29,7 @@ export const useMqttStore = defineStore({
       [mqttConfig.topic.climate_weather, initialMessage],
       [mqttConfig.topic.image_screensaver, initialMessage],
       [mqttConfig.topic.sensor_henHouse_hatch_lidar_data_distanceCm, initialMessage],
+      [mqttConfig.topic.sensor_henHouse_heatLamp, initialMessage],
       [mqttConfig.topic.transport_departure, initialMessage],
     ]) as Map<string, IMqttMessage>,
     lastRecievedMqttMessage: -1 as number
@@ -115,6 +116,11 @@ export const useMqttStore = defineStore({
             case mqttConfig.topic.sensor_henHouse_hatch_lidar_data_distanceCm: {
               const sensorStore = useSensorStore();
               sensorStore.updateHenHouseHatchLidarDataDistanceCm(jSONMessage);
+              break;
+            } 
+            case mqttConfig.topic.sensor_henHouse_heatLamp: {
+              const sensorStore = useSensorStore();
+              sensorStore.updateHenHouseHeatLamp(jSONMessage);
               break;
             } 
             case mqttConfig.topic.settings: {

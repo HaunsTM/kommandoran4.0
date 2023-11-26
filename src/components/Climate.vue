@@ -39,9 +39,10 @@
           <div class="d-flex py-3 justify-space-between">
             <v-list-item
               density="compact"
-              prepend-icon="mdi-heat-wave"
+              :prepend-icon="henHouseHeatLampState.mdiIcon"
+              :color="henHouseHeatLampState.mdiColor"
             >
-              <v-list-item-subtitle>on</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ henHouseHeatLampState.state }}</v-list-item-subtitle>
             </v-list-item>
 
            
@@ -127,6 +128,7 @@ import { useSensorStore } from '../stores/sensorStore';
 import { useSettingStore } from '../stores/settingStore';
 
 import { Vue3Marquee } from 'vue3-marquee'
+import ISensor from '@/interfaces/iSensor';
 @Component({
     components: {
       Vue3Marquee
@@ -256,8 +258,28 @@ export default class Climate extends Vue {
     
   }
 
+  get henHouseHeatLampState():{mdiIcon: string, mdiColor: string, state: string} {
+    const heatLamp = JSON.parse(JSON.stringify(this.sensorStore.getCurrentHenHouseHeatLamp)) as ISensor;
+
+    let mdiIcon = "mdi-printer-3d-nozzle-heat-outline";
+    let mdiColor = "blue";
+    let state = heatLamp.state;
+
+    if (heatLamp.state === "on") {
+      mdiIcon = "mdi-printer-3d-nozzle-heat";
+      mdiColor = "red";
+    } 
+    
+    return {
+      mdiIcon : mdiIcon,
+      mdiColor : mdiColor,
+      state : state
+    };
+  
+  }
+
 }
 </script>
 
 <style scoped>
-</style>@/interfaces/iSensorDictionary
+</style>
