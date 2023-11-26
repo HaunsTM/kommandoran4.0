@@ -10,6 +10,8 @@ import { useClimateHeatingSystemStore } from '@/stores/climateHeatingSystemStore
 import { useScreenSaverImageStore } from '@/stores/screenSaverImageStore';
 import { useDepartureStore } from '@/stores/departureStore';
 import { useClimateWeatherStore } from '@/stores/climateWeatherStore';
+import { useSensorStore } from '@/stores/sensorStore';
+import { useSettingStore } from '@/stores/settingStore';
 
 const initialMessage:IMqttMessage = {
   timeReceived: -1,
@@ -26,6 +28,7 @@ export const useMqttStore = defineStore({
       [mqttConfig.topic.climate_heatingSystem_house_outdoorRoom, initialMessage],
       [mqttConfig.topic.climate_weather, initialMessage],
       [mqttConfig.topic.image_screensaver, initialMessage],
+      [mqttConfig.topic.sensor_henHouse_hatch_lidar_data_distanceCm, initialMessage],
       [mqttConfig.topic.transport_departure, initialMessage],
     ]) as Map<string, IMqttMessage>,
     lastRecievedMqttMessage: -1 as number
@@ -109,6 +112,16 @@ export const useMqttStore = defineStore({
 
               break;
             }
+            case mqttConfig.topic.sensor_henHouse_hatch_lidar_data_distanceCm: {
+              const sensorStore = useSensorStore();
+              sensorStore.updateHenHouseHatchLidarDataDistanceCm(jSONMessage);
+              break;
+            } 
+            case mqttConfig.topic.settings: {
+              const settingStore = useSettingStore();
+              settingStore.update(jSONMessage);
+              break;
+            } 
             case mqttConfig.topic.transport_departure: {
               const departureStore = useDepartureStore();
               const lines = jSONMessage.lines;

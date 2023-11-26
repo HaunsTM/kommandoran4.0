@@ -44,23 +44,12 @@
               <v-list-item-subtitle>on</v-list-item-subtitle>
             </v-list-item>
 
+           
             <v-list-item
               density="compact"
-              prepend-icon="mdi-garage-open-variant"
+              :prepend-icon ="henHouseHatchOpeningLevelSymbol.mdiIcon"
             >
-              <v-list-item-subtitle>48%</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item
-              density="compact"
-              prepend-icon="mdi-garage-alert-variant"
-            >
-              <v-list-item-subtitle>48%</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item
-              density="compact"
-              prepend-icon="mdi-garage-variant"
-            >
-              <v-list-item-subtitle>48%</v-list-item-subtitle>
+              <v-list-item-subtitle>{{ henHouseHatchOpeningLevelSymbol.openingLevelText }}</v-list-item-subtitle>
             </v-list-item>
           </div>
         </v-card>
@@ -73,7 +62,24 @@
     </v-card-item>
 
     <v-card-text class="py-0">
+            
+      <Vue3Marquee  :clone="true" :duration="15">
+        <div class="card">
+            <h2>1</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+        </div>
+        <div class="card">
+            <h2>3</h2>
+            <p>
+                Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod
+                tempor incididunt ut labore et dolore magna aliqua.
+            </p>
+        </div>
 
+      </Vue3Marquee>
       <v-list class="v-list-scroll">
         <v-list-item class="v-list-item-scroll" style="animation-delay: 0s;">
           <v-list-item-content>
@@ -117,15 +123,21 @@ import { useClimateHeatingSystemStore } from '../stores/climateHeatingSystemStor
 import IHeatingSystemDictionary from '@/interfaces/iHeatingSystemDictionary';
 import { useClimateWeatherStore } from '../stores/climateWeatherStore';
 import IClimateWeather from '@/interfaces/IClimateWeather';
+import { useSensorStore } from '../stores/sensorStore';
+import { useSettingStore } from '../stores/settingStore';
 
+import { Vue3Marquee } from 'vue3-marquee'
 @Component({
     components: {
+      Vue3Marquee
     },
 })
 export default class Climate extends Vue {
     
   private readonly climateHeatingSystemStore = useClimateHeatingSystemStore();
   private readonly climateWeatherStore = useClimateWeatherStore();
+  private readonly sensorStore = useSensorStore();
+  private readonly settingStore = useSettingStore();
 
   public currentClimateHeatingSystemHenHouse(numberOfDecimals: number): { mean: number, max: number, min: number, confidenceInterval: [number, number] } {
     const heatingSystemStats = this.heatingSystemStats(this.climateHeatingSystemStore.getCurrentHenHouse, numberOfDecimals);
@@ -179,27 +191,73 @@ export default class Climate extends Vue {
     return directions[index];
   }
 
+  get henHouseHatchOpeningLevel(): number {
+    const currentDistanceCm = this.sensorStore.getCurrentHenHouseHatchLidarDataDistanceCm;
+    const distBetweenLIDARAndOpenHatchEdgeCm = parseFloat(this.settingStore.getCurrent?.henHouse?.hatch?.distance?.distBetweenLIDARAndOpenHatchEdgeCm);
+    const distBetweenLIDARAndClosedHatchEdgeCm = parseFloat(this.settingStore.getCurrent?.henHouse?.hatch?.distance?.distBetweenLIDARAndClosedHatchEdgeCm);
+    // corrections due to possible incorrect LIDAR measurement, ensure dMin ≤ dCurrent ≤ dMax
+    let correctedCurrentDistanceCm = currentDistanceCm;
+
+    //if measurement is under minimum level
+    if (currentDistanceCm < distBetweenLIDARAndOpenHatchEdgeCm ) {
+        correctedCurrentDistanceCm = distBetweenLIDARAndOpenHatchEdgeCm;
+    }
+
+    //if measurement extends maximum level
+    if (currentDistanceCm > distBetweenLIDARAndClosedHatchEdgeCm ) {
+        correctedCurrentDistanceCm = distBetweenLIDARAndClosedHatchEdgeCm;
+    }
+
+    // "normalized"
+    const dMin = distBetweenLIDARAndOpenHatchEdgeCm - distBetweenLIDARAndOpenHatchEdgeCm;
+    const dMax = distBetweenLIDARAndClosedHatchEdgeCm - distBetweenLIDARAndOpenHatchEdgeCm;
+
+    const dCurrent = correctedCurrentDistanceCm - distBetweenLIDARAndOpenHatchEdgeCm;
+
+    // calculate opening levels
+    let hatchCloseLevel = dCurrent / dMax * 100;
+    let hatchOpeningLevel = 100 - hatchCloseLevel;
+
+    hatchOpeningLevel = Math.round(hatchOpeningLevel);
+
+    return hatchOpeningLevel;
+  }
+
+  get henHouseHatchOpeningLevelSymbol():{mdiIcon: string, openingLevelText: string} {
+    const isConsideredClosed = this.settingStore.getCurrent?.henHouse?.hatch?.distance?.isConsideredClosed;
+    const isConsideredNotClosed = this.settingStore.getCurrent?.henHouse?.hatch?.distance?.isConsideredNotClosed;
+    const isConsideredOpen = this.settingStore.getCurrent?.henHouse?.hatch.distance?.isConsideredOpen;
+
+    const henHouseHatchOpeningLevel = this.henHouseHatchOpeningLevel;
+    let mdiIcon = "";
+    let openingLevelText = "NO_LEVEL";
+    switch (true) {
+      case (parseFloat(isConsideredClosed?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel && henHouseHatchOpeningLevel < parseFloat(isConsideredClosed?.toOpeningPercentLevel)): {
+        mdiIcon = "mdi-garage-variant";
+        openingLevelText = isConsideredClosed["stateName"];
+        break;
+      }
+      case (parseFloat(isConsideredNotClosed?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel && henHouseHatchOpeningLevel < parseFloat(isConsideredNotClosed?.toOpeningPercentLevel)): {
+        mdiIcon = "mdi-garage-alert-variant";
+        openingLevelText = isConsideredNotClosed.stateName;
+        break;
+      }
+      case (parseFloat(isConsideredOpen?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel && henHouseHatchOpeningLevel < parseFloat(isConsideredOpen?.toOpeningPercentLevel)): {
+        mdiIcon = "mdi-garage-open-variant";
+        openingLevelText = isConsideredOpen["stateName"];
+        break;
+      }
+    }
+
+    return {
+      mdiIcon: mdiIcon, 
+      openingLevelText: openingLevelText
+    }
+    
+  }
+
 }
 </script>
 
 <style scoped>
-.v-list-scroll {
-  width: 100%; /* Adjust based on your needs */
-  display: flex; /* Add this */
-  overflow: hidden;
-}
-
-.v-list-item-scroll {
-  width: 30%; /* Add this */
-  animation: scroll-left 5s linear infinite;
-}
-
-@keyframes scroll-left {
-  0% {
-    transform: translateX(0%);
-  }
-  100% {
-    transform: translateX(-100%);
-  }
-}
-</style>
+</style>@/interfaces/iSensorDictionary

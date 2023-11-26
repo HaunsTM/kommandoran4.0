@@ -20,6 +20,8 @@ export const mqttConfig /*: IClientOptions*/ = {
       "climate_heatingSystem_house_outdoorRoom": "climate/heatingSystem/house/outdoorRoom",
       "climate_weather": "climate/weather",
       "image_screensaver": "image/screensaver",
+      "sensor_henHouse_hatch_lidar_data_distanceCm": "sensor/henHouse/hatch/lidar/data/distanceCm",
+      "settings": "settings",
       "transport_departure": "transport/departure"
     }
   }
