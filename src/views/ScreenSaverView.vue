@@ -1,21 +1,21 @@
 <template>
   <v-container fluid>
     <v-row no-gutters class="fill-height">
-      <v-col cols="5" class="half-screen">
+      <v-col cols="6" class="half-screen">
         <!-- Content for first column in first row goes here -->
         <img class="screen-saver-image " :src="imgSrc" alt="">
       </v-col>
-      <v-col cols="5" class="half-screen">
+      <v-col cols="6" class="half-screen">
         <!-- Content for second column in first row goes here -->
         <time-and-date></time-and-date>
       </v-col>
     </v-row>
     <v-row no-gutters class="fill-height">
-      <v-col cols="5" class="half-screen">
+      <v-col cols="6" class="half-screen">
         <!-- Content for first column in second row goes here -->
         <climate></climate>
       </v-col>
-      <v-col cols="5" class="half-screen">
+      <v-col cols="6" class="half-screen">
         <!-- Content for second column in second row goes here -->
         <calendar></calendar>
       </v-col>
