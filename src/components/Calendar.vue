@@ -1,39 +1,45 @@
 <template>
-  <v-card>
-    <v-card-title>
-      Todays events
-    </v-card-title>
-    <v-card-subtitle>
-      {{ todayText() }}, week {{ currentWeek() }}
-    </v-card-subtitle>
-    
-    <template v-if="todaysEvents().length > 0">
-      <v-table>
-        <thead>
-          <tr>
-            <th class="text-left">Summary</th>
-            <th class="text-center">Start</th>
-            <th class="text-center">End</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr v-for="(event, index) in todaysEvents()" :key="index">
-            <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
-              <td class="text-left">{{ event.summary }}</td>
-              <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
-              <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
-            </template>
-            <template v-else>
-              <td colspan="3" class="text-left">{{ event.summary }}</td>
-            </template>
-          </tr>
-        </tbody>
-      </v-table>
-    </template>
-    <template v-else>
-      <p>None today</p>
-    </template>
-  </v-card>
+  <v-container fluid>
+    <v-row align="start" justify="center">
+      <v-col cols="12">        
+        <v-card>
+          <v-card-title>
+            Todays events
+          </v-card-title>
+          <v-card-subtitle>
+            {{ todayText() }}, week {{ currentWeek() }}
+          </v-card-subtitle>
+          
+          <template v-if="todaysEvents().length > 0">
+            <v-table>
+              <thead>
+                <tr>
+                  <th class="text-left">Summary</th>
+                  <th class="text-center">Start</th>
+                  <th class="text-center">End</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr v-for="(event, index) in todaysEvents()" :key="index">
+                  <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
+                    <td class="text-left">{{ event.summary }}</td>
+                    <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
+                    <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
+                  </template>
+                  <template v-else>
+                    <td colspan="3" class="text-left">{{ event.summary }}</td>
+                  </template>
+                </tr>
+              </tbody>
+            </v-table>
+          </template>
+          <template v-else>
+            <p>None today</p>
+          </template>
+        </v-card>
+      </v-col>
+    </v-row>
+  </v-container>
 </template>
   
   <script lang="ts">

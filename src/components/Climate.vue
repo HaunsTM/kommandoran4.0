@@ -1,29 +1,18 @@
-<template> 
-
-
-
-
-
+<template>
   <v-container fill-height fluid>
-    <v-row align="start" justify="center">
+    <v-row>
       <v-col cols="6">
         <v-card>
           <v-card-title>
             Home
           </v-card-title>
-          <v-table>
-            <thead>
-              <tr>
-                <th>Summary</th>
-                <th>&deg;C</th>
-              </tr>
-            </thead>
+          <v-table density="compact">
             <tbody>
               <tr>
-                <td>Indoor</td><td>{{currentClimateHeatingSystemsHouse(1).mean}}</td>
+                <td>Indoor</td><td>{{currentClimateHeatingSystemsHouse(1).mean}}&nbsp;&deg;C</td>
               </tr>
               <tr>
-                <td>Outdoor room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}</td>
+                <td>Outdoor room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</td>
               </tr>
             </tbody>
           </v-table>
@@ -35,16 +24,10 @@
           <v-card-title>
             Hen house
           </v-card-title>          
-          <v-table>
-            <thead>
-              <tr>
-                <th>Summary</th>
-                <th>&deg;C</th>
-              </tr>
-            </thead>
+          <v-table density="compact">
             <tbody>
               <tr>
-                <td>Barn</td><td>{{currentClimateHeatingSystemHenHouse(1).mean}}</td>
+                <td>Barn</td><td>{{currentClimateHeatingSystemHenHouse(1).mean}}&nbsp;&deg;C</td>
               </tr>
             </tbody>
           </v-table>
@@ -64,61 +47,65 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-row>
+      <v-col cols="12">
+        <v-card>
+          <v-card-item title="Weather">
+          </v-card-item>
+
+          <v-card-text>
+                  
+            <Vue3Marquee :clone="true" :duration="5">
+              
+              <v-card>
+                <v-card-subtitle>
+                  Temperature
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  <v-icon icon="mdi-thermometer-lines"></v-icon>{{currentClimateWeather.attributes?.temperature}}&nbsp;{{currentClimateWeather.attributes?.temperature_unit}}
+                </v-card-subtitle>
+              </v-card>
+              <v-card>
+                <v-card-subtitle>
+                  Humidity
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  <v-icon icon="mdi-water-percent"></v-icon>&nbsp;{{currentClimateWeather.attributes?.humidity}}&nbsp;%
+                </v-card-subtitle>
+              </v-card>
+              <v-card>
+                <v-card-subtitle>
+                  Air pressure
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  <v-icon icon="mdi-gauge-empty"></v-icon>&nbsp;{{currentClimateWeather.attributes?.pressure}}&nbsp;{{currentClimateWeather.attributes?.pressure_unit}}
+                </v-card-subtitle>
+              </v-card>
+              <v-card>
+                <v-card-subtitle>
+                  Wind speed
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  <v-icon icon="mdi-weather-windy"></v-icon>&nbsp;{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}}&nbsp;({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}})&nbsp;{{currentClimateWeather.attributes?.wind_speed_unit}}
+                </v-card-subtitle>
+              </v-card>
+              <v-card>
+                <v-card-subtitle>
+                  Wind bearing
+                </v-card-subtitle>
+                <v-card-subtitle>
+                  <v-icon icon="mdi-compass"></v-icon>&nbsp;{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)
+                </v-card-subtitle>
+              </v-card>
+
+            </Vue3Marquee>
+
+          </v-card-text>
+        </v-card>
+      </v-col>
+    </v-row>
   </v-container>
 
-  <v-card>
-    <v-card-item title="Weather">
-    </v-card-item>
-
-    <v-card-text>
-            
-      <Vue3Marquee :clone="true" :duration="5">
-        
-        <v-card>
-          <v-card-title>
-            Temperature
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon icon="mdi-thermometer-lines"></v-icon>{{currentClimateWeather.attributes?.temperature}}&nbsp;{{currentClimateWeather.attributes?.temperature_unit}}
-          </v-card-subtitle>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            Humidity
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon icon="mdi-water-percent"></v-icon>&nbsp;{{currentClimateWeather.attributes?.humidity}}&nbsp;%
-          </v-card-subtitle>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            Air pressure
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon icon="mdi-gauge-empty"></v-icon>&nbsp;{{currentClimateWeather.attributes?.pressure}}&nbsp;{{currentClimateWeather.attributes?.pressure_unit}}
-          </v-card-subtitle>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            Wind speed
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon icon="mdi-weather-windy"></v-icon>&nbsp;{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}}&nbsp;({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}})&nbsp;{{currentClimateWeather.attributes?.wind_speed_unit}}
-          </v-card-subtitle>
-        </v-card>
-        <v-card>
-          <v-card-title>
-            Wind bearing
-          </v-card-title>
-          <v-card-subtitle>
-            <v-icon icon="mdi-compass"></v-icon>&nbsp;{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)
-          </v-card-subtitle>
-        </v-card>
-
-      </Vue3Marquee>
-      
-    </v-card-text>
-  </v-card>
 </template>
 
 <script lang="ts">
