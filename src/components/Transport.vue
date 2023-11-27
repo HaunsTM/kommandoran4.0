@@ -1,8 +1,12 @@
 <template>
-  <div>
-    <h2>
+
+  <v-card>
+    <v-card-title>
+      Transport
+    </v-card-title>
+    <v-card-subtitle>
       Bus
-    </h2>
+    </v-card-subtitle>
     <v-table>
       <thead>
         <tr>
@@ -52,7 +56,7 @@
         </tr>
       </tbody>
     </v-table>
-  </div>
+  </v-card>
 </template>
 
 <script lang="ts">
