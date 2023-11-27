@@ -8,8 +8,8 @@
       :hoursHandColor="'black'" 
       :minutesHandColor="'black'"
       :secondsHandColor="'red'"
-      :topText="dateText()"
-      :bottomText="currentWeekText()"
+      :topText="swedishTime"
+      :bottomText="'Hauns™'"
       :textColor="'black'"
       ></analog-clock>
     <transport></transport>
@@ -28,22 +28,33 @@
 	})
   export default class TimeAndDate extends Vue {
 
-    dateText(): string {
-      const date = new Date();
-      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
-      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
-      const text = `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
-      return text;
+    timerReference!: number;
+    
+    swedishTime: string = this.getSwedishTime();
+
+    getSwedishTime(): string {
+      // Create a date object for the current time in Sweden
+      const date = new Date(new Date().toLocaleString("en-US", {timeZone: "Europe/Stockholm"}));
+
+      // Get the hours and minutes, padding with zeros if necessary
+      const hours = date.getHours().toString().padStart(2, '0');
+      const minutes = date.getMinutes().toString().padStart(2, '0');
+
+      // Return the time in HH:mm format
+      return `${hours}:${minutes}`;
     }
 
-    currentWeekText(): string {
-      const date = new Date();
-      date.setHours(0, 0, 0, 0);
-      date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
-      const week1 = new Date(date.getFullYear(), 0, 4);
-      const week = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
-      const text = `w ${week < 10 ? '0' + week : week}`;
-      return text;
+    
+    mounted() {
+      this.timerReference = setInterval(() => {
+        this.swedishTime = this.getSwedishTime();
+      }, 1000);
+    }
+  
+    beforeUnmount() {
+      if (this.timerReference) {
+        clearInterval(this.timerReference);
+      }
     }
 
   }

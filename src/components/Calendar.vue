@@ -1,33 +1,39 @@
 <template>
-  <div>
-    <h2>Todays events</h2>
-  </div>
-  <template v-if="todaysEvents().length > 0">
-    <v-table>
-      <thead>
-        <tr>
-          <th class="text-left">Summary</th>
-          <th class="text-center">Start</th>
-          <th class="text-center">End</th>
-        </tr>
-      </thead>
-      <tbody>
-        <tr v-for="(event, index) in todaysEvents()" :key="index">
-          <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
-            <td class="text-left">{{ event.summary }}</td>
-            <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
-            <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
-          </template>
-          <template v-else>
-            <td colspan="3" class="text-left">{{ event.summary }}</td>
-          </template>
-        </tr>
-      </tbody>
-    </v-table>
-  </template>
-  <template v-else>
-    <p>None today</p>
-  </template>
+  <v-card>
+    <v-card-title>
+      Todays events
+    </v-card-title>
+    <v-card-subtitle>
+      {{ todayText() }}, week {{ currentWeek() }}
+    </v-card-subtitle>
+    
+    <template v-if="todaysEvents().length > 0">
+      <v-table>
+        <thead>
+          <tr>
+            <th class="text-left">Summary</th>
+            <th class="text-center">Start</th>
+            <th class="text-center">End</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr v-for="(event, index) in todaysEvents()" :key="index">
+            <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
+              <td class="text-left">{{ event.summary }}</td>
+              <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
+              <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
+            </template>
+            <template v-else>
+              <td colspan="3" class="text-left">{{ event.summary }}</td>
+            </template>
+          </tr>
+        </tbody>
+      </v-table>
+    </template>
+    <template v-else>
+      <p>None today</p>
+    </template>
+  </v-card>
 </template>
   
   <script lang="ts">
@@ -83,6 +89,30 @@
           .sort((a, b) => a.start.getTime() - b.start.getTime());
 
       return todaysEvents;
+    }
+    
+
+    todayText(): string {
+
+      const date = new Date();
+      const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+      const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
+      const text = `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
+
+      return text;
+    }
+
+    currentWeek(): string {
+      // returns week number 01, 02, 10, 27 etc
+
+      const date = new Date();
+      date.setHours(0, 0, 0, 0);
+      date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
+      const week1 = new Date(date.getFullYear(), 0, 4);
+      const week = 1 + Math.round(((date.getTime() - week1.getTime()) / 86400000 - 3 + (week1.getDay() + 6) % 7) / 7);
+      const text = `${week < 10 ? '0' + week : week}`;
+
+      return text;
     }
   }
   </script>

@@ -233,7 +233,7 @@ export default class Climate extends Vue {
     let mdiIcon = "";
     let openingLevelText = "NO_LEVEL";
     switch (true) {
-      case (parseFloat(isConsideredClosed?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel && henHouseHatchOpeningLevel < parseFloat(isConsideredClosed?.toOpeningPercentLevel)): {
+      case (henHouseHatchOpeningLevel < parseFloat(isConsideredClosed?.toOpeningPercentLevel)): {
         mdiIcon = "mdi-garage-variant";
         openingLevelText = isConsideredClosed["stateName"];
         break;
@@ -243,7 +243,7 @@ export default class Climate extends Vue {
         openingLevelText = isConsideredNotClosed.stateName;
         break;
       }
-      case (parseFloat(isConsideredOpen?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel && henHouseHatchOpeningLevel < parseFloat(isConsideredOpen?.toOpeningPercentLevel)): {
+      case (parseFloat(isConsideredOpen?.fromOpeningPercentLevel) <= henHouseHatchOpeningLevel): {
         mdiIcon = "mdi-garage-open-variant";
         openingLevelText = isConsideredOpen["stateName"];
         break;
