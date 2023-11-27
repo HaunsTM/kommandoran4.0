@@ -56,6 +56,14 @@
 
       const todaysEvents: Array<ICalendarEvent> = 
         this.calendarStore.currentCalendars
+          .filter( (calendar) => {
+            const unwantedCalendars = ["Week numbers"];
+            if (unwantedCalendars.includes(calendar.name)) {
+              return false;
+            } else {
+              return true;
+            }
+          })
           .flatMap(calendar => calendar.events)
           .filter(event => {
               //filter out todays events

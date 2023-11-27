@@ -2,7 +2,7 @@
 
   <v-container  fill-height fluid>
     <v-row align="start" justify="center">
-      <v-col cols="12">
+      <v-col cols="6">
         <v-card class="mx-auto">
           <v-card-item title="Home">
           </v-card-item>
@@ -21,7 +21,7 @@
         </v-card>
       </v-col>
     
-      <v-col cols="12">
+      <v-col cols="6">
         <v-card
           class="mx-auto"
         >
@@ -38,7 +38,6 @@
 
           <div class="d-flex py-3 justify-space-between">
             <v-list-item
-              density="compact"
               :prepend-icon="henHouseHeatLampState.mdiIcon"
               :color="henHouseHeatLampState.mdiColor"
             >
@@ -262,12 +261,12 @@ export default class Climate extends Vue {
     const heatLamp = JSON.parse(JSON.stringify(this.sensorStore.getCurrentHenHouseHeatLamp)) as ISensor;
 
     let mdiIcon = "mdi-printer-3d-nozzle-heat-outline";
-    let mdiColor = "blue";
+    let mdiColor = "info";
     let state = heatLamp.state;
 
     if (heatLamp.state === "on") {
       mdiIcon = "mdi-printer-3d-nozzle-heat";
-      mdiColor = "red";
+      mdiColor = "error";
     } 
     
     return {
