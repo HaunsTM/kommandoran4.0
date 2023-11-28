@@ -6,7 +6,7 @@ const routes: Array<RouteRecordRaw> = [
   {
     path: '/',
     name: 'default',
-    component: ScreenSaverView
+    component: HomeAssistantView
   },
   {
     path: '/home-assistant',
