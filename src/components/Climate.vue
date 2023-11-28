@@ -12,7 +12,7 @@
                 <td>Indoor</td><td>{{currentClimateHeatingSystemsHouse(1).mean}}&nbsp;&deg;C</td>
               </tr>
               <tr>
-                <td>Outdoor room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</td>
+                <td>Outdoor&nbsp;room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</td>
               </tr>
             </tbody>
           </v-table>
@@ -29,21 +29,11 @@
               <tr>
                 <td>Barn</td><td>{{currentClimateHeatingSystemHenHouse(1).mean}}&nbsp;&deg;C</td>
               </tr>
+              <tr>                
+                <td><v-icon :color="henHouseHeatLampState.mdiColor">{{ henHouseHeatLampState.mdiIcon }}</v-icon>&nbsp;{{ henHouseHeatLampState.state }}</td><td><v-icon>{{ henHouseHatchOpeningLevelSymbol.mdiIcon }}</v-icon>&nbsp;{{ henHouseHatchOpeningLevelSymbol.openingLevelText }}</td>
+              </tr>
             </tbody>
           </v-table>
-          <div class="d-flex py-3 justify-space-between">
-            <v-list-item
-              :prepend-icon="henHouseHeatLampState.mdiIcon"
-              :color="henHouseHeatLampState.mdiColor"
-            >
-              <v-list-item-subtitle>{{ henHouseHeatLampState.state }}</v-list-item-subtitle>
-            </v-list-item>
-            <v-list-item
-              :prepend-icon ="henHouseHatchOpeningLevelSymbol.mdiIcon"
-            >
-              <v-list-item-subtitle>{{ henHouseHatchOpeningLevelSymbol.openingLevelText }}</v-list-item-subtitle>
-            </v-list-item>
-          </div>
         </v-card>
       </v-col>
     </v-row>
