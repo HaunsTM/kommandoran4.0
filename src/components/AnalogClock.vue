@@ -12,8 +12,8 @@
     timerReference!: number;
     
     @Prop({ default: 100 }) canvasHeight!: number;
-    // @Prop({ default: 100 }) canvasWidth!: number;
-    canvasWidth = this.canvasHeight;
+    @Prop({ default: 100 }) canvasWidth!: number;
+    //canvasWidth = this.canvasHeight;
 
     @Prop({ default: "white" }) faceBackgroundColor!: string;
     @Prop({ default: "white" }) faceBorderColor!: string;
@@ -79,8 +79,8 @@
         this.drawMinuteTicks(ctx, this.clockRadius); 
         this.drawNumbers(ctx, this.clockRadius);
         this.drawTime(ctx, this.clockRadius);
-        this.drawText(this.topText, ctx, {x: 0, y: -this.clockRadius / 3.5}, this.clockRadius);
-        this.drawText(this.bottomText, ctx, {x: 0, y: this.clockRadius / 3.5}, this.clockRadius);
+        this.drawText(this.topText, 0.275, ctx, {x: 0, y: -this.clockRadius / 3.5}, this.clockRadius);
+        this.drawText(this.bottomText, 0.175, ctx, {x: 0, y: this.clockRadius / 3.5}, this.clockRadius);
       }
     }
 
@@ -170,8 +170,8 @@
       ctx.rotate(-pos);
     }
 
-    private drawText(text: string, ctx: CanvasRenderingContext2D, pos: {x: number, y: number}, radius: number) {
-      ctx.font = radius*0.175 + "px arial";
+    private drawText(text: string, size: number, ctx: CanvasRenderingContext2D, pos: {x: number, y: number}, radius: number) {
+      ctx.font = radius*size + "px arial";
       ctx.fillStyle = this.textColor;
       ctx.fillText(text, pos.x, pos.y);
     }

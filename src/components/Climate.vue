@@ -1,8 +1,8 @@
 <template>
-  <v-container fill-height fluid>
+  <v-container fluid style="border: 1px solid green">
     <v-row>
-      <v-col cols="6">
-        <v-card>
+      <v-col cols="6" class="ma-0 pa-0">
+        <v-card class="ma-0 pa-0">
           <v-card-title>
             Home
           </v-card-title>
@@ -19,8 +19,8 @@
         </v-card>
       </v-col>
     
-      <v-col cols="6">
-        <v-card>
+      <v-col cols="6" class="ma-0 pa-0">
+        <v-card class="ma-0 pa-0">
           <v-card-title>
             Hen house
           </v-card-title>          

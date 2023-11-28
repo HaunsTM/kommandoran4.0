@@ -1,5 +1,5 @@
 <template>
-  <v-container fluid>
+  <v-container fluid class="ma-0 pa-0">
     <v-row>
       <v-col cols="12">
         
@@ -11,13 +11,6 @@
             Bus
           </v-card-subtitle>
           <v-table>
-            <thead>
-              <tr>
-                <th></th>
-                <th colspan="2" class="text-center">current</th>
-                <th colspan="2" class="text-center">next</th>
-              </tr>
-            </thead>
             <tbody>
               <tr>
                 <th>Lund</th>

@@ -6,7 +6,7 @@
       <v-main>
 
         <!-- Provides the application the proper gutter -->
-        <v-container fluid>
+        <v-container fluid class="ma-0 pa-0">
 
           <!-- If using vue-router -->
           <router-view/>
@@ -115,5 +115,9 @@ export default class ScreenSaverView extends Vue
     width: 100vw;
     max-height: 100vh;
     max-width: 100vw;
+  }
+  .container{
+     max-width: 100vw;
+     padding:0px;
   }
 </style>
