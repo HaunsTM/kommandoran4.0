@@ -9,9 +9,7 @@
           <v-card-subtitle>
             {{ todayText() }}, week {{ currentWeek() }}
           </v-card-subtitle>
-          
-          <template v-if="todaysEvents().length > 0">
-            <v-table>
+            <v-table density="compact">
               <thead>
                 <tr>
                   <th class="text-left">Summary</th>
@@ -20,22 +18,23 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="(event, index) in todaysEvents()" :key="index">
-                  <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
-                    <td class="text-left">{{ event.summary }}</td>
-                    <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
-                    <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
-                  </template>
-                  <template v-else>
-                    <td colspan="3" class="text-left">{{ event.summary }}</td>
-                  </template>
-                </tr>
+                <template v-if="todaysEvents().length > 0">
+                  <tr v-for="(event, index) in todaysEvents()" :key="index">
+                    <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
+                      <td class="text-left">{{ event.summary }}</td>
+                      <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
+                      <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
+                    </template>
+                    <template v-else>
+                      <td colspan="3" class="text-center">{{ event.summary }}</td>
+                    </template>
+                  </tr>
+                </template>
+                <template v-else>
+                  <td colspan="3" class="text-center">Nothing today</td>
+                </template>
               </tbody>
             </v-table>
-          </template>
-          <template v-else>
-            <p>None today</p>
-          </template>
         </v-card>
       </v-col>
     </v-row>

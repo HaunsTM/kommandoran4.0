@@ -1,6 +1,6 @@
 <template>
   
-  <v-container fluid style="border: 1px solid green">
+  <v-container fluid>
     <v-row>
       <v-col cols="12" class="ma-0 pa-0">
         <div class="main-container">
@@ -80,15 +80,13 @@
     background-color: transparent;
   }
   .child-container {
-    border: 1px solid white;
     padding-top: 45px;
-
   }
 
   .clock {
     position: absolute;
     top: 6px;
-    right: 0px;
+    right: 2px;
     z-index: 1;
   }
 

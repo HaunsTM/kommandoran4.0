@@ -1,100 +1,80 @@
 <template>
-  <v-container fluid style="border: 1px solid green">
-    <v-row>
-      <v-col cols="6" class="ma-0 pa-0">
-        <v-card class="ma-0 pa-0">
-          <v-card-title>
-            Home
-          </v-card-title>
-          <v-table density="compact">
-            <tbody>
-              <tr>
-                <td>Indoor</td><td>{{currentClimateHeatingSystemsHouse(1).mean}}&nbsp;&deg;C</td>
-              </tr>
-              <tr>
-                <td>Outdoor&nbsp;room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card>
-      </v-col>
-    
-      <v-col cols="6" class="ma-0 pa-0">
-        <v-card class="ma-0 pa-0">
-          <v-card-title>
-            Hen house
-          </v-card-title>          
-          <v-table density="compact">
-            <tbody>
-              <tr>
-                <td>Barn</td><td>{{currentClimateHeatingSystemHenHouse(1).mean}}&nbsp;&deg;C</td>
-              </tr>
-              <tr>                
-                <td><v-icon :color="henHouseHeatLampState.mdiColor">{{ henHouseHeatLampState.mdiIcon }}</v-icon>&nbsp;{{ henHouseHeatLampState.state }}</td><td><v-icon>{{ henHouseHatchOpeningLevelSymbol.mdiIcon }}</v-icon>&nbsp;{{ henHouseHatchOpeningLevelSymbol.openingLevelText }}</td>
-              </tr>
-            </tbody>
-          </v-table>
-        </v-card>
-      </v-col>
-    </v-row>
-    <v-row>
-      <v-col cols="12">
-        <v-card>
-          <v-card-item title="Weather">
-          </v-card-item>
+  
+  <v-card fluid class="ma-0 pa-0">
+    <v-card-item title="Climate">
+    </v-card-item>
 
-          <v-card-text>
-                  
-            <Vue3Marquee :clone="true" :duration="5">
-              
-              <v-card>
-                <v-card-subtitle>
-                  Temperature
-                </v-card-subtitle>
-                <v-card-subtitle>
-                  <v-icon icon="mdi-thermometer-lines"></v-icon>{{currentClimateWeather.attributes?.temperature}}&nbsp;{{currentClimateWeather.attributes?.temperature_unit}}
-                </v-card-subtitle>
-              </v-card>
-              <v-card>
-                <v-card-subtitle>
-                  Humidity
-                </v-card-subtitle>
-                <v-card-subtitle>
-                  <v-icon icon="mdi-water-percent"></v-icon>&nbsp;{{currentClimateWeather.attributes?.humidity}}&nbsp;%
-                </v-card-subtitle>
-              </v-card>
-              <v-card>
-                <v-card-subtitle>
-                  Air pressure
-                </v-card-subtitle>
-                <v-card-subtitle>
-                  <v-icon icon="mdi-gauge-empty"></v-icon>&nbsp;{{currentClimateWeather.attributes?.pressure}}&nbsp;{{currentClimateWeather.attributes?.pressure_unit}}
-                </v-card-subtitle>
-              </v-card>
-              <v-card>
-                <v-card-subtitle>
-                  Wind speed
-                </v-card-subtitle>
-                <v-card-subtitle>
-                  <v-icon icon="mdi-weather-windy"></v-icon>&nbsp;{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}}&nbsp;({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}})&nbsp;{{currentClimateWeather.attributes?.wind_speed_unit}}
-                </v-card-subtitle>
-              </v-card>
-              <v-card>
-                <v-card-subtitle>
-                  Wind bearing
-                </v-card-subtitle>
-                <v-card-subtitle>
-                  <v-icon icon="mdi-compass"></v-icon>&nbsp;{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)
-                </v-card-subtitle>
-              </v-card>
-
-            </Vue3Marquee>
-
-          </v-card-text>
-        </v-card>
-      </v-col>
-    </v-row>
-  </v-container>
+    <v-card-text>
+      <v-container fluid class="pa-0">
+        <v-row>
+          <v-col cols="6">
+            <table>
+              <thead>
+                <tr>
+                  <th colspan="2" class="border-bottom">House</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td>Indoor</td><td>{{currentClimateHeatingSystemsHouse(1).mean}}&nbsp;&deg;C</td>
+                </tr>
+                <tr>
+                  <td>Outdoor&nbsp;room</td><td>{{currentClimateHeatingSystemOutdoorRoom(1).mean}}&nbsp;&deg;C</td>
+                </tr>
+              </tbody>
+            </table>
+          </v-col>
+          <v-col cols="6">
+            <table>
+              <thead>
+                <tr>
+                  <th colspan="4" class="border-bottom border-left">Hen house</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td colspan="2" class="border-left">Barn</td><td colspan="2">{{currentClimateHeatingSystemHenHouse(1).mean}}&nbsp;&deg;C</td>
+                </tr>
+                <tr>
+                  <td class="border-left"><v-icon :color="henHouseHeatLampState.mdiColor">{{ henHouseHeatLampState.mdiIcon }}</v-icon></td><td>{{ henHouseHeatLampState.state }}</td><td class="border-left"><v-icon>{{ henHouseHatchOpeningLevelSymbol.mdiIcon }}</v-icon></td><td>{{ henHouseHatchOpeningLevelSymbol.openingLevelText }}</td>
+                </tr>
+              </tbody>
+            </table>
+          </v-col>      
+        </v-row>
+        <v-row>
+          <v-col cols="12" class="ma-0 pa-0">
+            <table>
+              <thead>
+                <tr>
+                  <th colspan="5" class="border-bottom">Weather</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr>
+                  <td><v-icon icon="mdi-thermometer-lines"></v-icon>{{currentClimateWeather.attributes?.temperature}}</td>
+                  <td>{{currentClimateWeather.attributes?.temperature_unit}}</td>
+                  <td class="border-left"><v-icon icon="mdi-water-percent"></v-icon></td>
+                  <td>{{currentClimateWeather.attributes?.humidity}}&nbsp;%</td>
+                  <td class="border-left"><v-icon icon="mdi-gauge-empty"></v-icon>&nbsp;{{currentClimateWeather.attributes?.pressure}}</td>
+                  <td>{{currentClimateWeather.attributes?.pressure_unit}}</td>
+                </tr>
+                <tr>
+                  <td><v-icon icon="mdi-weather-windy"></v-icon></td>
+                  <td>{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}}&nbsp;({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}}) {{currentClimateWeather.attributes?.wind_speed_unit}}</td>
+ 
+                  <td class="border-left"><v-icon icon="mdi-compass"></v-icon></td>
+                  <td>{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)</td>
+                  <td>&nbsp;</td>
+                  <td>&nbsp;</td>
+                </tr>
+              </tbody>
+            </table>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-card-text>
+  </v-card>
 
 </template>
 
@@ -242,12 +222,16 @@ export default class Climate extends Vue {
     const heatLamp = JSON.parse(JSON.stringify(this.sensorStore.getCurrentHenHouseHeatLamp)) as ISensor;
 
     let mdiIcon = "mdi-printer-3d-nozzle-heat-outline";
-    let mdiColor = "info";
+    let mdiColor = "";
     let state = heatLamp.state;
 
     if (heatLamp.state === "on") {
       mdiIcon = "mdi-printer-3d-nozzle-heat";
       mdiColor = "error";
+    } 
+    
+    if (heatLamp.state === "on") {
+      mdiIcon = "mdi-printer-3d-nozzle-heat-outline";
     } 
     
     return {
@@ -262,4 +246,11 @@ export default class Climate extends Vue {
 </script>
 
 <style scoped>
+  .border-bottom {
+      border-bottom: 1px solid #343434;
+  }
+  .border-left {
+    border-left: 1px solid #343434;
+    padding-left: 0.5rem;
+  }
 </style>

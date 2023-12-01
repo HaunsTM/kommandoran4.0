@@ -16,15 +16,22 @@ import * as directives from 'vuetify/directives'
 const app = createApp(App);
 const pinia = createPinia();
 const vuetify = createVuetify({
-    components,
-    directives,
-    theme: {
-      defaultTheme: 'dark'
+  components,
+  directives,
+  theme: {
+    defaultTheme: 'dark',
+    themes: {
+      dark: {
+        colors: {
+          background: '#292930', // your desired color here
+        },
+      },
     },
-    icons: {
-      defaultSet: 'mdi', // This sets the icon set to use mdi
-    }
-  });
+  },
+  icons: {
+    defaultSet: 'mdi', // This sets the icon set to use mdi
+  }
+});
 
 app.use(router);
 app.use(pinia);
