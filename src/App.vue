@@ -1,7 +1,7 @@
 <template>  
   <div>
     
-    <v-app>
+    <v-app id="app">
       <!-- Sizes your content based upon application components -->
       <v-main>
 
@@ -71,7 +71,7 @@ export default class ScreenSaverView extends Vue
 
   private async userBecomesActive() {
     // Your custom logic here
-    await router.push({path: '/home-assistant'});
+    //await router.push({path: '/home-assistant'});
   }
 
   private async userBecomesInactive() {
@@ -106,18 +106,14 @@ export default class ScreenSaverView extends Vue
 }
 </script>
 
-<style>
-  v-app {
-    padding: 0;
-    margin: 0;
-    
-    height: 100vh;
-    width: 100vw;
-    max-height: 100vh;
-    max-width: 100vw;
-  }
-  .container{
-     max-width: 100vw;
-     padding:0px;
-  }
+<style scoped>
+#app {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100vh; /* Full height of the viewport */
+  margin: 0;
+  padding: 0;
+  overflow: hidden; /* Ensure there's no scrolling */
+}
 </style>
