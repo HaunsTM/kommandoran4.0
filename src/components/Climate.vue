@@ -52,8 +52,8 @@
               </thead>
               <tbody>
                 <tr>
-                  <td><v-icon icon="mdi-thermometer-lines"></v-icon>{{currentClimateWeather.attributes?.temperature}}</td>
-                  <td>{{currentClimateWeather.attributes?.temperature_unit}}</td>
+                  <td><v-icon icon="mdi-thermometer-lines"></v-icon></td>
+                  <td>{{currentClimateWeather.attributes?.temperature}}&nbsp;{{currentClimateWeather.attributes?.temperature_unit}}</td>
                   <td class="border-left"><v-icon icon="mdi-water-percent"></v-icon></td>
                   <td>{{currentClimateWeather.attributes?.humidity}}&nbsp;%</td>
                   <td class="border-left"><v-icon icon="mdi-gauge-empty"></v-icon>&nbsp;{{currentClimateWeather.attributes?.pressure}}</td>
@@ -64,9 +64,7 @@
                   <td>{{roundNumber(currentClimateWeather.attributes?.wind_speed, 1)}}&nbsp;({{roundNumber(currentClimateWeather.attributes?.wind_gust_speed, 1)}}) {{currentClimateWeather.attributes?.wind_speed_unit}}</td>
  
                   <td class="border-left"><v-icon icon="mdi-compass"></v-icon></td>
-                  <td>{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)</td>
-                  <td>&nbsp;</td>
-                  <td>&nbsp;</td>
+                  <td colspan="3">{{degreesToCompass(currentClimateWeather.attributes?.wind_bearing)}}&nbsp;({{currentClimateWeather.attributes?.wind_bearing}}&deg;)</td>
                 </tr>
               </tbody>
             </table>

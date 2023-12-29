@@ -2,7 +2,7 @@
   <v-container fluid class="ma-0 pa-0">
     <v-row no-gutters class="fill-height">
       <v-col cols="6" class="half-screen">
-        <div class="image-container">
+        <div class="content-container">
           <v-img :src="imgSrc" alt="" contain height="100%" width="100%"></v-img>
         </div>
       </v-col>
@@ -89,18 +89,13 @@ export default class ScreenSaverView extends Vue
   overflow: hidden; /* Ensure there's no scrolling */
 }
 
-.image-container {
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  height: 100%;
-}
-
 .content-container {
   display: flex;
   justify-content: center;
-  align-items: center;
+  align-items: baseline;
   height: 100%;
+
+  padding: 0.2rem;
 }
 
 .content {
