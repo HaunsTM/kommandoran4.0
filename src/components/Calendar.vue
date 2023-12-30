@@ -18,8 +18,8 @@
                 </tr>
               </thead>
               <tbody>
-                <template v-if="todaysEvents().length > 0">
-                  <tr v-for="(event, index) in todaysEvents()" :key="index">
+                <template v-if="currentEvents.length > 0">
+                  <tr v-for="(event, index) in currentEvents" :key="index">
                     <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
                       <td class="text-left">{{ event.summary }}</td>
                       <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
@@ -41,7 +41,7 @@
   </v-container>
 </template>
   
-  <script lang="ts">
+<script lang="ts">
   import { Component, Vue } from 'vue-facing-decorator';
   import ICalendarEvent from '@/interfaces/iCalendarEvent';
   import { useCalendarStore } from '@/stores/calendarStore';
@@ -52,6 +52,7 @@
   export default class Calendar extends Vue {
 
     private readonly calendarStore = useCalendarStore();
+    private loopTimer: number | undefined;
 
     timePartSwedishTime(date: Date) {
       const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Stockholm' };
@@ -85,12 +86,12 @@
               const occursToday = startsToday || endsToday || spansOverWholeDay;
               return occursToday;
           })
-          /*.filter(event => {
+          .filter(event => {
               //filter out events that already have happened
             const eventHasEnded =  event.end < today;
             const eventWillEndInFuture = !eventHasEnded;
             return eventWillEndInFuture;
-          })*/
+          })
           .sort((a, b) => a.start.getTime() - b.start.getTime());
 
       return todaysEvents;
@@ -118,6 +119,29 @@
       const text = `${week < 10 ? '0' + week : week}`;
 
       return text;
+    }
+    // Add a new data property to keep track of the current set of events
+    currentEvents: Array<ICalendarEvent> = [];
+
+    created() {
+      // When the component is created, start the loop
+      this.loopEvents();
+    }
+
+    loopEvents() {
+      let index = 0;
+      this.loopTimer = setInterval(() => {
+        const events = this.todaysEvents();
+        this.currentEvents = events.slice(index, index + 3);
+        index = (index + 3) % events.length;
+      }, 5000);
+    }
+
+    beforeDestroy() {
+      
+      if (this.loopTimer) {
+        clearInterval(this.loopTimer);
+      }
     }
   }
   </script>
