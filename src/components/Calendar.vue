@@ -1,43 +1,39 @@
 <template>
   <v-container fluid class="ma-0 pa-0">
-    <v-row align="start" justify="center">
-      <v-col cols="12">        
-        <v-card>
-          <v-card-title>
-            Todays events
-          </v-card-title>
-          <v-card-subtitle>
-            {{ todayText() }}, week {{ currentWeek() }}
-          </v-card-subtitle>
-            <v-table density="compact">
-              <thead>
-                <tr>
-                  <th class="text-left">Summary</th>
-                  <th class="text-center">Start</th>
-                  <th class="text-center">End</th>
-                </tr>
-              </thead>
-              <tbody>
-                <template v-if="currentEvents.length > 0">
-                  <tr v-for="(event, index) in currentEvents" :key="index">
-                    <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
-                      <td class="text-left">{{ event.summary }}</td>
-                      <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
-                      <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
-                    </template>
-                    <template v-else>
-                      <td colspan="3" class="text-center">{{ event.summary }}</td>
-                    </template>
-                  </tr>
+    <v-card height="100%">
+      <v-card-title>
+        Todays events
+      </v-card-title>
+      <v-card-subtitle>
+        {{ todayText() }}, week {{ currentWeek() }}
+      </v-card-subtitle>
+        <v-table density="compact">
+          <thead>
+            <tr>
+              <th class="text-left">Summary</th>
+              <th class="text-center">Start</th>
+              <th class="text-center">End</th>
+            </tr>
+          </thead>
+          <tbody class="full-height">
+            <template v-if="tempDisplayedEvents.length > 0">
+              <tr v-for="(event, index) in tempDisplayedEvents" :key="index">
+                <template v-if="timePartSwedishTime(event.start) !== timePartSwedishTime(event.end)">
+                  <td class="text-left">{{ event.summary }}</td>
+                  <td class="text-center">{{ timePartSwedishTime(event.start) }}</td>
+                  <td class="text-center">{{ timePartSwedishTime(event.end) }}</td>
                 </template>
                 <template v-else>
-                  <td colspan="3" class="text-center">Nothing today</td>
+                  <td colspan="3" class="text-center">{{ event.summary }}</td>
                 </template>
-              </tbody>
-            </v-table>
-        </v-card>
-      </v-col>
-    </v-row>
+              </tr>
+            </template>
+            <template v-else>
+              <td colspan="3" class="text-center">Nothing today</td>
+            </template>
+          </tbody>
+        </v-table>
+    </v-card>
   </v-container>
 </template>
   
@@ -45,6 +41,7 @@
   import { Component, Vue } from 'vue-facing-decorator';
   import ICalendarEvent from '@/interfaces/iCalendarEvent';
   import { useCalendarStore } from '@/stores/calendarStore';
+
   @Component({ 
     components: {
     } 
@@ -52,7 +49,11 @@
   export default class Calendar extends Vue {
 
     private readonly calendarStore = useCalendarStore();
-    private loopTimer: number | undefined;
+    private loopCalendarEventsTimer: number | undefined;
+    tempDisplayedEvents: Array<ICalendarEvent> = [];
+    
+      private readonly maxNumberOfSimultanouslyDisplayedCalendarEvents = 3;
+      private readonly timeToDisplaySimultanouslyDisplayedCalendarEventsBeforeSwitchMs = 5*1000;
 
     timePartSwedishTime(date: Date) {
       const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Stockholm' };
@@ -60,7 +61,7 @@
       return swedishTime;
     }
     
-    todaysEvents(): Array<ICalendarEvent> {
+    todaysAllCalendarEvents(): Array<ICalendarEvent> {
       const today = new Date();
 
       const startOfToday = new Date(today.getFullYear(), today.getMonth(), today.getDate());
@@ -120,31 +121,29 @@
 
       return text;
     }
-    // Add a new data property to keep track of the current set of events
-    currentEvents: Array<ICalendarEvent> = [];
+
+    setTempDisplayedCalendarEvents() {
+      let index = 0;
+      this.loopCalendarEventsTimer = setInterval(() => {
+        const events = this.todaysAllCalendarEvents ();
+        this.tempDisplayedEvents = events.slice(index, index + this.maxNumberOfSimultanouslyDisplayedCalendarEvents);
+        index = (index + this.maxNumberOfSimultanouslyDisplayedCalendarEvents) % events.length;
+      }, this.timeToDisplaySimultanouslyDisplayedCalendarEventsBeforeSwitchMs);
+    }
 
     created() {
       // When the component is created, start the loop
-      this.loopEvents();
-    }
-
-    loopEvents() {
-      let index = 0;
-      this.loopTimer = setInterval(() => {
-        const events = this.todaysEvents();
-        this.currentEvents = events.slice(index, index + 3);
-        index = (index + 3) % events.length;
-      }, 5000);
+      this.setTempDisplayedCalendarEvents();
     }
 
     beforeDestroy() {
       
-      if (this.loopTimer) {
-        clearInterval(this.loopTimer);
+      if (this.loopCalendarEventsTimer) {
+        clearInterval(this.loopCalendarEventsTimer);
       }
     }
   }
-  </script>
+</script>
   
-  <style scoped>
-  </style>
+<style scoped>
+</style>

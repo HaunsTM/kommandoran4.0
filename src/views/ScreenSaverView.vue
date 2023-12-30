@@ -94,7 +94,6 @@ export default class ScreenSaverView extends Vue
   justify-content: center;
   align-items: baseline;
   height: 100%;
-
   padding: 0.2rem;
 }
 
