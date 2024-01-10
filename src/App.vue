@@ -71,7 +71,7 @@ export default class ScreenSaverView extends Vue
 
   private async userBecomesActive() {
     // Your custom logic here
-    //await router.push({path: '/home-assistant'});
+    await router.push({path: '/home-assistant'});
   }
 
   private async userBecomesInactive() {

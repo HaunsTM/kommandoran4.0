@@ -15,6 +15,8 @@ export default class ServiceMqttHomeAssistant extends Vue {
     
     private mqttClient!: Client;
     private mqttStore = useMqttStore();
+    
+    private heartBeatTimer: number | undefined;
 
     private readonly topicsForSubscription = 
         [
@@ -91,6 +93,12 @@ export default class ServiceMqttHomeAssistant extends Vue {
         this.mqttClient.send(mqttMessage);
     }
 
+    sendHeartBeat() {
+        const message = { "timestampUTC":  Date.now().toString() };
+        this.sendMessage(mqttConfig.topic.iot_kiosk_kommandoran_heartBeat, JSON.stringify(message));
+        
+    }
+
     /** hooks */
     private created(): void {
         //this.startMqttService(mqttConfig.clientOptions);
@@ -98,9 +106,13 @@ export default class ServiceMqttHomeAssistant extends Vue {
 
     private mounted(): void {
         this.connect();
+        this.heartBeatTimer = setInterval(this.sendHeartBeat, 1000); // Send every second
     }
 
-    private beforeDestroy() {
+    private beforeDestroy() {        
+        if(this.heartBeatTimer) {            
+            clearInterval(this.heartBeatTimer);
+        }
         if(this.mqttClient?.isConnected()) {
             this.mqttClient.disconnect();
         }

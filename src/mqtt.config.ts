@@ -10,7 +10,7 @@ export const mqttConfig /*: IClientOptions*/ = {
         "password": "mqtt1",
         "cleanSession": true,
         "keepAliveInterval": 100,        
-        "reconnect": false,
+        "reconnect": true,
       } as ConnectionOptions      
     },
     "topic": {
@@ -23,7 +23,8 @@ export const mqttConfig /*: IClientOptions*/ = {
       "sensor_henHouse_hatch_lidar_data_distanceCm": "sensor/henHouse/hatch/lidar/data/distanceCm",
       "sensor_henHouse_heatLamp": "sensor/henHouse/heatLamp",
       "settings": "settings",
-      "transport_departure": "transport/departure"
+      "transport_departure": "transport/departure",
+      "iot_kiosk_kommandoran_heartBeat": "iot/kiosk/kommandoran/heartBeat"
     }
   }
   

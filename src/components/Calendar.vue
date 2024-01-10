@@ -51,9 +51,15 @@
     private readonly calendarStore = useCalendarStore();
     private loopCalendarEventsTimer: number | undefined;
     tempDisplayedEvents: Array<ICalendarEvent> = [];
+    private reactiveDateTimeTimer: number | undefined;
+    private reactiveCurrentDateTime = new Date();
     
-      private readonly maxNumberOfSimultanouslyDisplayedCalendarEvents = 3;
-      private readonly timeToDisplaySimultanouslyDisplayedCalendarEventsBeforeSwitchMs = 5*1000;
+    private readonly maxNumberOfSimultanouslyDisplayedCalendarEvents = 3;
+    private readonly timeToDisplaySimultanouslyDisplayedCalendarEventsBeforeSwitchMs = 5*1000;
+
+    updateCurrentReactiveDateTime() {
+      this.reactiveCurrentDateTime = new Date();
+    }
 
     timePartSwedishTime(date: Date) {
       const options: Intl.DateTimeFormatOptions = { hour: '2-digit', minute: '2-digit', timeZone: 'Europe/Stockholm' };
@@ -132,6 +138,8 @@
     }
 
     created() {
+      
+      this.reactiveDateTimeTimer = setInterval(this.updateCurrentReactiveDateTime, 1000); // Update every second
       // When the component is created, start the loop
       this.setTempDisplayedCalendarEvents();
     }
@@ -140,6 +148,9 @@
       
       if (this.loopCalendarEventsTimer) {
         clearInterval(this.loopCalendarEventsTimer);
+      }
+      if (this.reactiveDateTimeTimer) {
+        clearInterval(this.reactiveDateTimeTimer);
       }
     }
   }
