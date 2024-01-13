@@ -107,7 +107,7 @@
 
     todayText(): string {
 
-      const date = new Date();
+      const date =  this.reactiveCurrentDateTime;
       const days = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
       const months = ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'];
       const text = `${days[date.getDay()]} ${date.getDate()} ${months[date.getMonth()]}`;
@@ -118,7 +118,7 @@
     currentWeek(): string {
       // returns week number 01, 02, 10, 27 etc
 
-      const date = new Date();
+      const date =  this.reactiveCurrentDateTime;
       date.setHours(0, 0, 0, 0);
       date.setDate(date.getDate() + 3 - (date.getDay() + 6) % 7);
       const week1 = new Date(date.getFullYear(), 0, 4);
