@@ -6,7 +6,7 @@
 
 import { Component, Vue } from 'vue-facing-decorator';
 import { mqttConfig } from '../mqtt.config';
-import { Client, Message } from 'paho-mqtt';
+import { Client, Message, MQTTError } from 'paho-mqtt';
 import type IMqttMessage from '../interfaces/iMqttMessage';
 import { useMqttStore } from '../stores/mqttStore';
 
@@ -38,7 +38,7 @@ export default class ServiceMqttHomeAssistant extends Vue {
 
         let connectOptions = mqttConfig.connection.options;
         connectOptions.onSuccess = this.onConnect;
-        //connectOptions.onFailure = this.onFailure;
+        connectOptions.onFailure = this.onFailure;
 
         if (this.mqttClient) {
             this.mqttClient.connect(connectOptions);
@@ -64,8 +64,9 @@ export default class ServiceMqttHomeAssistant extends Vue {
         }
     }
 
-    private onFailure(errorMessage: string, invocationContext: any) {
-        console.log('Connection failed: ', errorMessage, invocationContext);
+    //private onFailure(errorMessage: string, invocationContext: any) {
+    private onFailure(responseObject: MQTTError) {
+        console.log('Connection failed: ', responseObject.errorMessage);
     }
 
     private onConnectionLost(responseObject: { errorCode: number; errorMessage: string }) {
@@ -90,7 +91,11 @@ export default class ServiceMqttHomeAssistant extends Vue {
     sendMessage(topic: string, message: string) {
         let mqttMessage = new Message(message);
         mqttMessage.destinationName = topic;
-        this.mqttClient.send(mqttMessage);
+        try {
+            this.mqttClient.send(mqttMessage);
+        } catch (error) {
+            console.log(error);
+        }
     }
 
     sendHeartBeat() {
